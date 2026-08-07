@@ -1,2 +1,2 @@
 # ViCodothon_HackSphere
-Hackton using AI coding Vicodothon
+Hackathon using AI coding Vicodothon
