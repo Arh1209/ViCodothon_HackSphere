@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Settings, Sliders, Cpu, Mic, Server, Shield, CheckCircle2, 
-  AlertCircle, Lock, Info, Activity, Database
+  AlertCircle, Lock, Info, Activity, Database, Save
 } from 'lucide-react';
-import { fetchHealth } from '../services/api';
+import { fetchHealth, fetchSettings, updateSettings } from '../services/api';
 
-export default function SettingsView({ candidatesCount }) {
+export default function SettingsView({ candidatesCount, onSettingsUpdated }) {
   const [healthStatus, setHealthStatus] = useState({ status: 'checking...' });
-  const [minQuestions] = useState(8);
-  const [minDays] = useState(4);
+  const [minQuestions, setMinQuestions] = useState(8);
+  const [minDays, setMinDays] = useState(4);
   const [difficultyPref, setDifficultyPref] = useState('ADAPTIVE');
+  
+  const [saveStatus, setSaveStatus] = useState(null); // success / error message
+  const [saving, setSaving] = useState(false);
 
   const SpeechRecognition = typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
   const isVoiceSupported = Boolean(SpeechRecognition);
 
   useEffect(() => {
     checkBackendHealth();
+    loadCurrentSettings();
   }, []);
 
   const checkBackendHealth = async () => {
@@ -24,6 +28,44 @@ export default function SettingsView({ candidatesCount }) {
       setHealthStatus(data);
     } catch (e) {
       setHealthStatus({ status: 'offline' });
+    }
+  };
+
+  const loadCurrentSettings = async () => {
+    try {
+      const settings = await fetchSettings();
+      if (settings.min_questions) setMinQuestions(settings.min_questions);
+      if (settings.min_curriculum_days) setMinDays(settings.min_curriculum_days);
+    } catch (e) {
+      console.warn('Could not load current settings:', e);
+    }
+  };
+
+  const handleSaveSettings = async (e) => {
+    e.preventDefault();
+    setSaveStatus(null);
+
+    const qVal = parseInt(minQuestions, 10);
+    const dVal = parseInt(minDays, 10);
+
+    if (isNaN(qVal) || qVal < 8) {
+      setSaveStatus({ type: 'error', text: 'Minimum values are enforced by the Technical Specification: at least 8 questions.' });
+      return;
+    }
+    if (isNaN(dVal) || dVal < 4) {
+      setSaveStatus({ type: 'error', text: 'Minimum values are enforced by the Technical Specification: at least 4 curriculum days.' });
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await updateSettings(qVal, dVal);
+      setSaveStatus({ type: 'success', text: res.message || 'Interview settings updated successfully.' });
+      if (onSettingsUpdated) onSettingsUpdated(res.settings);
+    } catch (err) {
+      setSaveStatus({ type: 'error', text: err.message || 'Failed to update interview settings.' });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -40,6 +82,92 @@ export default function SettingsView({ candidatesCount }) {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Active Rules Display Box */}
+        <div className="dashboard-hero-card" style={{ padding: '1.25rem 1.5rem', marginBottom: 0 }}>
+          <div style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 700, letterSpacing: '0.04em', marginBottom: '0.3rem' }}>
+            CURRENT INTERVIEW RULES
+          </div>
+          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div>
+              <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>Minimum Questions: </span>
+              <strong style={{ color: '#fff', fontSize: '1.1rem' }}>{minQuestions}</strong>
+            </div>
+            <div>
+              <span style={{ fontSize: '0.82rem', color: '#94a3b8' }}>Minimum Curriculum Days: </span>
+              <strong style={{ color: '#fff', fontSize: '1.1rem' }}>{minDays}</strong>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 1: Editable Interview Settings */}
+        <form className="glass-card" onSubmit={handleSaveSettings}>
+          <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Sliders size={18} color="#818cf8" /> Editable Technical Interview Configuration
+          </h3>
+
+          {saveStatus && (
+            <div style={{ 
+              padding: '0.75rem 1rem', 
+              borderRadius: '10px', 
+              fontSize: '0.88rem', 
+              marginBottom: '1.25rem',
+              background: saveStatus.type === 'success' ? 'rgba(52, 211, 153, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+              border: `1px solid ${saveStatus.type === 'success' ? 'rgba(52, 211, 153, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+              color: saveStatus.type === 'success' ? '#34d399' : '#fca5a5',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              {saveStatus.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              {saveStatus.text}
+            </div>
+          )}
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '1.25rem' }}>
+            <div>
+              <label style={{ fontSize: '0.85rem', color: '#a5b4fc', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
+                Minimum Questions (Tech Spec Rule ≥ 8)
+              </label>
+              <input 
+                type="number" 
+                className="chat-input" 
+                value={minQuestions} 
+                onChange={(e) => setMinQuestions(e.target.value)}
+                min="8"
+                max="30"
+                style={{ width: '100%' }}
+              />
+              <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '0.3rem' }}>
+                Minimum values are enforced by Technical Specification: 8 questions minimum.
+              </span>
+            </div>
+
+            <div>
+              <label style={{ fontSize: '0.85rem', color: '#a5b4fc', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
+                Minimum Curriculum Days (Tech Spec Rule ≥ 4)
+              </label>
+              <input 
+                type="number" 
+                className="chat-input" 
+                value={minDays} 
+                onChange={(e) => setMinDays(e.target.value)}
+                min="4"
+                max="31"
+                style={{ width: '100%' }}
+              />
+              <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '0.3rem' }}>
+                Minimum values are enforced by Technical Specification: 4 curriculum days minimum.
+              </span>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button className="btn btn-primary" type="submit" disabled={saving} style={{ padding: '0.7rem 1.4rem' }}>
+              <Save size={16} /> {saving ? 'Saving...' : 'Save Settings'}
+            </button>
+          </div>
+        </form>
+
         {/* System Health Status Area */}
         <div className="glass-card">
           <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -85,63 +213,6 @@ export default function SettingsView({ candidatesCount }) {
           </div>
         </div>
 
-        {/* Section 1: Interview Settings */}
-        <div className="glass-card">
-          <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Sliders size={18} color="#818cf8" /> Technical Interview Rules & Bounds
-          </h3>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-            <div>
-              <label style={{ fontSize: '0.85rem', color: '#a5b4fc', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                Minimum Questions (Tech Spec Rule)
-              </label>
-              <input 
-                type="number" 
-                className="chat-input" 
-                value={minQuestions} 
-                disabled 
-                style={{ opacity: 0.8 }}
-              />
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '0.3rem' }}>
-                Mandatory minimum requirement: 8 questions per interview.
-              </span>
-            </div>
-
-            <div>
-              <label style={{ fontSize: '0.85rem', color: '#a5b4fc', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                Minimum Curriculum Days (Tech Spec Rule)
-              </label>
-              <input 
-                type="number" 
-                className="chat-input" 
-                value={minDays} 
-                disabled 
-                style={{ opacity: 0.8 }}
-              />
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block', marginTop: '0.3rem' }}>
-                Mandatory minimum requirement: 4 distinct curriculum days.
-              </span>
-            </div>
-
-            <div>
-              <label style={{ fontSize: '0.85rem', color: '#a5b4fc', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                Interview Difficulty Mode
-              </label>
-              <select 
-                className="filter-select" 
-                style={{ width: '100%' }}
-                value={difficultyPref}
-                onChange={(e) => setDifficultyPref(e.target.value)}
-              >
-                <option value="ADAPTIVE">Adaptive (Dynamic difficulty based on answer depth)</option>
-                <option value="FOUNDATIONAL">Foundational Focus</option>
-                <option value="ARCHITECTURAL">Architectural & System Design Focus</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
         {/* Section 2: AI Interviewer Settings */}
         <div className="glass-card">
           <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -172,14 +243,6 @@ export default function SettingsView({ candidatesCount }) {
               </div>
               <span className="status-pill passed">ENABLED</span>
             </div>
-
-            <div className="setting-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-              <div>
-                <div style={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>Session Context Memory Retention</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>In-memory multi-turn session tracking per sessionId</div>
-              </div>
-              <span className="status-pill passed">ENABLED</span>
-            </div>
           </div>
         </div>
 
@@ -199,25 +262,7 @@ export default function SettingsView({ candidatesCount }) {
                 {isVoiceSupported ? 'AVAILABLE' : 'UNAVAILABLE'}
               </span>
             </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-              <div>
-                <div style={{ color: '#fff', fontWeight: 600, fontSize: '0.9rem' }}>Text Answer Input Fallback</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>Always available regardless of microphone permission or voice support</div>
-              </div>
-              <span className="status-pill passed">ALWAYS ACTIVE</span>
-            </div>
           </div>
-        </div>
-
-        {/* Section 4: Security & Environment Safeguards */}
-        <div className="glass-card" style={{ borderLeft: '4px solid #818cf8' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#818cf8', fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.4rem' }}>
-            <Shield size={18} /> API Key & Security Safeguards
-          </div>
-          <p style={{ color: '#94a3b8', fontSize: '0.88rem', lineHeight: '1.5' }}>
-            The API environment variable <code>GEMINI_API_KEY</code> is loaded securely on the backend server and is never exposed to client-side code or browser network payloads.
-          </p>
         </div>
       </div>
     </div>

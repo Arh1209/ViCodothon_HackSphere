@@ -4,7 +4,7 @@ import {
   HelpCircle, Calendar, Users, Cpu, Layers, Sparkles, TrendingUp
 } from 'lucide-react';
 
-export default function AnalyticsView({ sessions, candidates }) {
+export default function AnalyticsView({ sessions, candidates, settings = { min_questions: 8, min_curriculum_days: 4 } }) {
   const totalSessions = sessions.length;
   const completedSessions = sessions.filter(s => s.done).length;
   const inProgressSessions = sessions.filter(s => !s.done).length;

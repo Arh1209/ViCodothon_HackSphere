@@ -7,6 +7,7 @@ import {
 export default function DashboardView({ 
   candidates, 
   sessions, 
+  settings = { min_questions: 8, min_curriculum_days: 4 },
   onStartNewInterview, 
   onViewSessionDetail,
   onSelectCandidate
@@ -107,8 +108,8 @@ export default function DashboardView({
             <HelpCircle size={20} />
           </div>
           <div>
-            <div className="metric-value">{avgQCount}</div>
-            <div className="metric-label">Avg Questions / Session</div>
+            <div className="metric-value">{settings.min_questions || 8}</div>
+            <div className="metric-label">Target Questions</div>
           </div>
         </div>
 
@@ -117,8 +118,8 @@ export default function DashboardView({
             <BookOpen size={20} />
           </div>
           <div>
-            <div className="metric-value">{avgDays}</div>
-            <div className="metric-label">Avg Days Covered</div>
+            <div className="metric-value">{settings.min_curriculum_days || 4}</div>
+            <div className="metric-label">Target Curriculum Days</div>
           </div>
         </div>
       </div>

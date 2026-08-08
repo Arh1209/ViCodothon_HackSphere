@@ -66,19 +66,29 @@ class AIEngine:
         eval_result = self.evaluate_answer(session, candidate_message)
         session.record_evaluation(eval_result)
         
-        # Step 3: Check completion criteria (Min 8 questions AND min 4 curriculum days)
+        # Step 3: Check completion criteria using dynamic settings
+        from app.services.db_service import get_settings, save_session_db
+        settings = get_settings()
+        min_q = settings.get("min_questions", 8)
+        min_days = settings.get("min_curriculum_days", 4)
         unique_days = len(set(session.days_covered))
-        if session.question_count >= 8 and unique_days >= 4:
-            # Check if we should complete or if candidate wants to end
+
+        if session.question_count >= min_q and unique_days >= min_days:
             # Finish interview and generate structured feedback
             session.done = True
             feedback = self.generate_final_feedback(session)
             session.feedback = feedback.model_dump()
             completion_msg = "Interview completed."
             session.add_message("interviewer", completion_msg)
+            save_session_db(
+                session.session_id, session.candidate.member.id,
+                session.candidate.member.name, session.candidate.member.jobRole,
+                session.messages, session.evaluations, session.question_count,
+                session.days_covered, True, session.feedback, session.created_at
+            )
             return completion_msg, True, feedback
             
-        # Step 4: Determine next curriculum day to satisfy 4+ days rule
+        # Step 4: Determine next curriculum day to satisfy min days rule
         next_day = self._select_next_curriculum_day(session)
         curr_day_info = get_curriculum_day(next_day) or {"title": f"Day {next_day} Topic"}
         session.record_curriculum_day(next_day, curr_day_info.get("title", ""))

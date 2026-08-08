@@ -63,3 +63,51 @@ export async function fetchHealth() {
   if (!res.ok) return { status: 'offline' };
   return await res.json();
 }
+
+export async function registerCandidate(userData) {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData)
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || 'Registration failed.');
+  }
+  return await res.json();
+}
+
+export async function loginCandidate(credentials) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials)
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || 'Login failed.');
+  }
+  return await res.json();
+}
+
+export async function fetchSettings() {
+  const res = await fetch(`${API_BASE}/settings`);
+  if (!res.ok) return { min_questions: 8, min_curriculum_days: 4 };
+  return await res.json();
+}
+
+export async function updateSettings(minQuestions, minCurriculumDays) {
+  const res = await fetch(`${API_BASE}/settings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      min_questions: minQuestions,
+      min_curriculum_days: minCurriculumDays
+    })
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || 'Failed to update settings.');
+  }
+  return await res.json();
+}

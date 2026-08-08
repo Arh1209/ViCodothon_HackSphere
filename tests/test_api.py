@@ -154,3 +154,53 @@ def test_adaptive_evaluation_scaling():
     assert r_strong.status_code == 200
     assert r_strong.json()["done"] is False
     assert len(r_strong.json()["reply"]) > 10
+
+def test_candidate_registration_and_login():
+    import time
+    email = f"testcand_{int(time.time())}@example.com"
+    reg_payload = {
+        "full_name": "Test Candidate",
+        "email": email,
+        "password": "password123",
+        "job_role": "ML Ops Engineer",
+        "years_experience": 4.5,
+        "education": "BS Software Engineering"
+    }
+    # 1. Register candidate
+    reg_resp = client.post("/api/auth/register", json=reg_payload)
+    assert reg_resp.status_code == 200
+    reg_data = reg_resp.json()
+    assert "candidate" in reg_data
+    assert reg_data["candidate"]["member"]["email"] == email
+
+    # 2. Duplicate registration attempt should fail
+    dup_resp = client.post("/api/auth/register", json=reg_payload)
+    assert dup_resp.status_code == 400
+
+    # 3. Login candidate with valid credentials
+    login_resp = client.post("/api/auth/login", json={"email": email, "password": "password123"})
+    assert login_resp.status_code == 200
+    assert login_resp.json()["candidate"]["member"]["name"] == "Test Candidate"
+
+    # 4. Login candidate with invalid password should fail
+    bad_login = client.post("/api/auth/login", json={"email": email, "password": "wrongpassword"})
+    assert bad_login.status_code == 401
+
+def test_settings_get_and_update_validation():
+    # 1. Get settings
+    get_resp = client.get("/api/settings")
+    assert get_resp.status_code == 200
+    settings = get_resp.json()
+    assert "min_questions" in settings
+    assert "min_curriculum_days" in settings
+
+    # 2. Update settings with invalid values (<8 or <4) should fail
+    inv_resp = client.post("/api/settings", json={"min_questions": 5, "min_curriculum_days": 2})
+    assert inv_resp.status_code == 400
+
+    # 3. Update settings with valid higher values
+    valid_resp = client.post("/api/settings", json={"min_questions": 10, "min_curriculum_days": 5})
+    assert valid_resp.status_code == 200
+    new_settings = valid_resp.json()["settings"]
+    assert new_settings["min_questions"] == 10
+    assert new_settings["min_curriculum_days"] == 5

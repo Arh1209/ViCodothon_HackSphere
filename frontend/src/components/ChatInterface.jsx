@@ -1,7 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, HelpCircle, Calendar, ArrowLeft, Mic, MicOff } from 'lucide-react';
 
-export default function ChatInterface({ candidate, messages, onSendTurn, loading, questionCount, daysCoveredCount, onBackToCandidates }) {
+export default function ChatInterface({
+  candidate,
+  messages,
+  onSendTurn,
+  loading,
+  questionCount,
+  daysCoveredCount,
+  minQuestions = 8,
+  minDays = 4,
+  onBackToCandidates
+}) {
   const [inputMsg, setInputMsg] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [voiceError, setVoiceError] = useState(null);
@@ -162,12 +172,12 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
           </div>
         </div>
 
-        <div className="progress-pills">
+        <div className="progress-pills" style={{ display: 'flex', gap: '0.6rem' }}>
           <span className="badge badge-primary">
-            <HelpCircle size={14} /> Question {questionCount} / 8+
+            <HelpCircle size={14} /> Question {questionCount} / {minQuestions}
           </span>
           <span className="badge badge-cyan">
-            <Calendar size={14} /> {daysCoveredCount} Curriculum Days Covered
+            <Calendar size={14} /> {daysCoveredCount} / {minDays} Curriculum Days
           </span>
         </div>
       </div>
