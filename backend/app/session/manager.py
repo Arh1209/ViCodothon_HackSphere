@@ -62,6 +62,9 @@ class SessionManager:
         self._sessions[session_id] = session
         return session
 
+    def get_all_sessions(self) -> List[InterviewSession]:
+        return list(self._sessions.values())
+
     def clear_all(self):
         self._sessions.clear()
 

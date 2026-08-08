@@ -50,3 +50,16 @@ export async function getSessionDebug(sessionId) {
   if (!res.ok) return null;
   return await res.json();
 }
+
+export async function fetchSessions() {
+  const res = await fetch(`${API_BASE}/sessions`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.sessions || [];
+}
+
+export async function fetchHealth() {
+  const res = await fetch(`/health`);
+  if (!res.ok) return { status: 'offline' };
+  return await res.json();
+}

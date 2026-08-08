@@ -102,3 +102,29 @@ def get_session_debug(session_id: str):
         "history_length": len(session.messages),
         "feedback": session.feedback
     }
+
+@router.get("/sessions")
+def get_all_sessions():
+    """
+    Returns list of all active and completed interview sessions.
+    """
+    sessions = session_manager.get_all_sessions()
+    result = []
+    for s in sessions:
+        result.append({
+            "sessionId": s.session_id,
+            "candidateId": s.candidate.member.id,
+            "candidateName": s.candidate.member.name,
+            "jobRole": s.candidate.member.jobRole,
+            "questionCount": s.question_count,
+            "daysCovered": s.days_covered,
+            "uniqueDaysCount": len(set(s.days_covered)),
+            "topicsCovered": s.topics_covered,
+            "done": s.done,
+            "createdAt": s.created_at,
+            "lastUpdated": s.last_updated,
+            "messages": s.messages,
+            "evaluations": s.evaluations,
+            "feedback": s.feedback
+        })
+    return {"sessions": result}
