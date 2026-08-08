@@ -71,12 +71,17 @@ export default function App() {
     try {
       setLoading(true);
       const data = await fetchCandidates();
-      setCandidates(data);
+      let updatedData = data;
       if (newCandidate) {
+        updatedData = [
+          newCandidate,
+          ...data.filter(c => c.member?.id !== newCandidate.member?.id)
+        ];
         setSelectedCandidate(newCandidate);
       } else if (data.length > 0 && !selectedCandidate) {
         setSelectedCandidate(data[0]);
       }
+      setCandidates(updatedData);
     } catch (err) {
       setError('Could not connect to backend server. Make sure FastAPI server is running on port 8000.');
     } finally {

@@ -9,6 +9,30 @@ if not os.path.exists(DATA_DIR):
 
 CANDIDATES_FILE = os.path.join(DATA_DIR, "candidates.json")
 CURRICULUM_FILE = os.path.join(DATA_DIR, "curriculum.json")
+ROOT_CANDIDATES_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "candidates.json"))
+
+def sync_candidate_to_json_files(cand_obj: Dict[str, Any]):
+    """
+    Syncs newly registered candidate into candidate JSON datasets.
+    """
+    target_files = [CANDIDATES_FILE, ROOT_CANDIDATES_FILE]
+    cid = cand_obj.get("member", {}).get("id")
+    if not cid:
+        return
+
+    for filepath in target_files:
+        if os.path.exists(filepath):
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                cands = data.get("candidates", [])
+                if not any(c.get("member", {}).get("id") == cid for c in cands):
+                    cands.insert(0, cand_obj)
+                    data["candidates"] = cands
+                    with open(filepath, "w", encoding="utf-8") as f:
+                        json.dump(data, f, indent=2)
+            except Exception:
+                pass
 
 def load_candidates() -> List[Dict[str, Any]]:
     original_candidates = []
@@ -17,13 +41,20 @@ def load_candidates() -> List[Dict[str, Any]]:
             data = json.load(f)
             original_candidates = data.get("candidates", [])
 
-    # Combine original cohort dataset with newly registered DB candidates
+    # Combine newly registered DB candidates (newest first) with original candidates
     registered_candidates = get_registered_candidates()
-    all_candidates = original_candidates + registered_candidates
+    raw_candidates = list(reversed(registered_candidates)) + original_candidates
 
-    # Exclude any candidate whose candidate_id is in deleted_candidates table
+    seen_ids = set()
+    unique_candidates = []
+    for c in raw_candidates:
+        cid = c.get("member", {}).get("id")
+        if cid and cid not in seen_ids:
+            seen_ids.add(cid)
+            unique_candidates.append(c)
+
     deleted_ids = get_deleted_candidate_ids()
-    return [c for c in all_candidates if c.get("member", {}).get("id") not in deleted_ids]
+    return [c for c in unique_candidates if c.get("member", {}).get("id") not in deleted_ids]
 
 def get_candidate_by_id(candidate_id: str) -> Optional[Dict[str, Any]]:
     candidates = load_candidates()

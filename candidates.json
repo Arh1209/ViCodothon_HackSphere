@@ -2,6 +2,42 @@
   "candidates": [
     {
       "member": {
+        "id": "CAND-REG-104",
+        "name": "Candidate To Delete",
+        "jobRole": "Tester",
+        "yearsExperience": 2.0,
+        "education": "BS",
+        "status": "REGISTERED",
+        "email": "delcand@example.com"
+      },
+      "missions": [],
+      "signals": {
+        "commitDays": 0,
+        "missionsCompleted": 0,
+        "missionsFirstTry": 0
+      },
+      "isRegisteredUser": true
+    },
+    {
+      "member": {
+        "id": "CAND-REG-103",
+        "name": "Test Candidate",
+        "jobRole": "ML Ops Engineer",
+        "yearsExperience": 4.5,
+        "education": "BS Software Engineering",
+        "status": "REGISTERED",
+        "email": "testcand_1786204069@example.com"
+      },
+      "missions": [],
+      "signals": {
+        "commitDays": 0,
+        "missionsCompleted": 0,
+        "missionsFirstTry": 0
+      },
+      "isRegisteredUser": true
+    },
+    {
+      "member": {
         "id": "CAND-001",
         "name": "Sarah Johnson",
         "jobRole": "Senior Data Engineer",
@@ -10,18 +46,71 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 1 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 1 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 2 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 4 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 2 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 2 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 3 },
-        { "day": 29, "title": "Monitoring, Logging & Observability", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 29,
+          "title": "Monitoring, Logging & Observability",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 28, "missionsCompleted": 30, "missionsFirstTry": 20 }
+      "signals": {
+        "commitDays": 28,
+        "missionsCompleted": 30,
+        "missionsFirstTry": 20
+      }
     },
     {
       "member": {
@@ -33,18 +122,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 3 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 2 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 4 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 5 },
-        { "day": 13, "title": "Function Calling & Structured Outputs", "passed": true, "attempts": 4 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 1 },
-        { "day": 18, "title": "Streaming Responses", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 3 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 2 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 13,
+          "title": "Function Calling & Structured Outputs",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 18,
+          "title": "Streaming Responses",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 2
+        }
       ],
-      "signals": { "commitDays": 22, "missionsCompleted": 29, "missionsFirstTry": 10 }
+      "signals": {
+        "commitDays": 22,
+        "missionsCompleted": 29,
+        "missionsFirstTry": 10
+      }
     },
     {
       "member": {
@@ -56,18 +199,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 1 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 1 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 1 },
-        { "day": 11, "title": "RAG End-to-End & LLM API Basics", "passed": true, "attempts": 1 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 1 },
-        { "day": 13, "title": "Function Calling & Structured Outputs", "passed": true, "attempts": 1 },
-        { "day": 21, "title": "LangChain Agents", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 1 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 11,
+          "title": "RAG End-to-End & LLM API Basics",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 13,
+          "title": "Function Calling & Structured Outputs",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 21,
+          "title": "LangChain Agents",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 31, "missionsCompleted": 31, "missionsFirstTry": 30 }
+      "signals": {
+        "commitDays": 31,
+        "missionsCompleted": 31,
+        "missionsFirstTry": 30
+      }
     },
     {
       "member": {
@@ -79,18 +276,71 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 4 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 5 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 5 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 3 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 2 },
-        { "day": 20, "title": "Conversation Memory & Context Management", "passed": true, "attempts": 3 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 4 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 5 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 2 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 20,
+          "title": "Conversation Memory & Context Management",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 2
+        }
       ],
-      "signals": { "commitDays": 18, "missionsCompleted": 28, "missionsFirstTry": 6 }
+      "signals": {
+        "commitDays": 18,
+        "missionsCompleted": 28,
+        "missionsFirstTry": 6
+      }
     },
     {
       "member": {
@@ -102,18 +352,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 2 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 2 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 2 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 4 },
-        { "day": 18, "title": "Streaming Responses", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 2 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 3 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 1 },
-        { "day": 29, "title": "Monitoring, Logging & Observability", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 18,
+          "title": "Streaming Responses",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 29,
+          "title": "Monitoring, Logging & Observability",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 30, "missionsCompleted": 31, "missionsFirstTry": 22 }
+      "signals": {
+        "commitDays": 30,
+        "missionsCompleted": 31,
+        "missionsFirstTry": 22
+      }
     },
     {
       "member": {
@@ -125,18 +429,70 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 3 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 5 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 5 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 4 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 4 },
-        { "day": 17, "title": "Chatbot Frontend Development", "passed": true, "attempts": 2 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 5 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "skipped": true },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 3 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 17,
+          "title": "Chatbot Frontend Development",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "skipped": true
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 3
+        }
       ],
-      "signals": { "commitDays": 19, "missionsCompleted": 24, "missionsFirstTry": 2 }
+      "signals": {
+        "commitDays": 19,
+        "missionsCompleted": 24,
+        "missionsFirstTry": 2
+      }
     },
     {
       "member": {
@@ -148,18 +504,70 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 1 },
-        { "day": 3, "title": "First AI Project, React Frontend & GitHub", "passed": true, "attempts": 1 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 2 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 1 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 1 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 1 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "skipped": true },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 2 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 3,
+          "title": "First AI Project, React Frontend & GitHub",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "skipped": true
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 2
+        }
       ],
-      "signals": { "commitDays": 26, "missionsCompleted": 27, "missionsFirstTry": 22 }
+      "signals": {
+        "commitDays": 26,
+        "missionsCompleted": 27,
+        "missionsFirstTry": 22
+      }
     },
     {
       "member": {
@@ -171,19 +579,76 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 1 },
-        { "day": 4, "title": "Reading & Processing Structured Data", "passed": true, "attempts": 1 },
-        { "day": 5, "title": "Reading & Processing Unstructured Data", "passed": true, "attempts": 1 },
-        { "day": 14, "title": "Fine-Tuning: Concepts & When to Use It", "skipped": true },
-        { "day": 15, "title": "Fine-Tuning: Hands-On with LoRA & QLoRA", "skipped": true },
-        { "day": 21, "title": "LangChain Agents", "passed": true, "attempts": 5 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 4 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 5 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "passed": true, "attempts": 1 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 2 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 4,
+          "title": "Reading & Processing Structured Data",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 5,
+          "title": "Reading & Processing Unstructured Data",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 14,
+          "title": "Fine-Tuning: Concepts & When to Use It",
+          "skipped": true
+        },
+        {
+          "day": 15,
+          "title": "Fine-Tuning: Hands-On with LoRA & QLoRA",
+          "skipped": true
+        },
+        {
+          "day": 21,
+          "title": "LangChain Agents",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 2
+        }
       ],
-      "signals": { "commitDays": 25, "missionsCompleted": 27, "missionsFirstTry": 15 }
+      "signals": {
+        "commitDays": 25,
+        "missionsCompleted": 27,
+        "missionsFirstTry": 15
+      }
     },
     {
       "member": {
@@ -195,18 +660,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 1 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 1 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 1 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 1 },
-        { "day": 13, "title": "Function Calling & Structured Outputs", "passed": true, "attempts": 1 },
-        { "day": 21, "title": "LangChain Agents", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 1 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 1 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 13,
+          "title": "Function Calling & Structured Outputs",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 21,
+          "title": "LangChain Agents",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 31, "missionsCompleted": 31, "missionsFirstTry": 29 }
+      "signals": {
+        "commitDays": 31,
+        "missionsCompleted": 31,
+        "missionsFirstTry": 29
+      }
     },
     {
       "member": {
@@ -218,18 +737,70 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 2 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 5 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": false, "attempts": 4 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": false, "attempts": 3 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 5 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 4 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": false, "attempts": 3 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "skipped": true },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 3 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": false,
+          "attempts": 4
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": false,
+          "attempts": 3
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": false,
+          "attempts": 3
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "skipped": true
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 3
+        }
       ],
-      "signals": { "commitDays": 22, "missionsCompleted": 23, "missionsFirstTry": 1 }
+      "signals": {
+        "commitDays": 22,
+        "missionsCompleted": 23,
+        "missionsFirstTry": 1
+      }
     },
     {
       "member": {
@@ -241,18 +812,67 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 2 },
-        { "day": 2, "title": "Local LLM & AI Coding Assistant Setup", "passed": true, "attempts": 1 },
-        { "day": 3, "title": "First AI Project, React Frontend & GitHub", "passed": true, "attempts": 3 },
-        { "day": 4, "title": "Reading & Processing Structured Data", "passed": true, "attempts": 2 },
-        { "day": 7, "title": "Embeddings Explained", "skipped": true },
-        { "day": 8, "title": "Vector Databases Overview", "skipped": true },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "skipped": true },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "skipped": true },
-        { "day": 22, "title": "Multi-Agent Orchestration", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 4 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 2,
+          "title": "Local LLM & AI Coding Assistant Setup",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 3,
+          "title": "First AI Project, React Frontend & GitHub",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 4,
+          "title": "Reading & Processing Structured Data",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "skipped": true
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "skipped": true
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "skipped": true
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "skipped": true
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 4
+        }
       ],
-      "signals": { "commitDays": 9, "missionsCompleted": 14, "missionsFirstTry": 5 }
+      "signals": {
+        "commitDays": 9,
+        "missionsCompleted": 14,
+        "missionsFirstTry": 5
+      }
     },
     {
       "member": {
@@ -264,18 +884,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 4 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 5 },
-        { "day": 9, "title": "Building & Populating the Vector Database", "passed": true, "attempts": 4 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 4 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 1 },
-        { "day": 18, "title": "Streaming Responses", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 2 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 1 },
-        { "day": 30, "title": "Production Readiness & Final Testing", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 9,
+          "title": "Building & Populating the Vector Database",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 18,
+          "title": "Streaming Responses",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 30,
+          "title": "Production Readiness & Final Testing",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 27, "missionsCompleted": 30, "missionsFirstTry": 14 }
+      "signals": {
+        "commitDays": 27,
+        "missionsCompleted": 30,
+        "missionsFirstTry": 14
+      }
     },
     {
       "member": {
@@ -287,18 +961,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 3 },
-        { "day": 4, "title": "Reading & Processing Structured Data", "passed": true, "attempts": 2 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 3 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 2 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 3 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 2 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 2 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "passed": true, "attempts": 1 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 4,
+          "title": "Reading & Processing Structured Data",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 27, "missionsCompleted": 30, "missionsFirstTry": 13 }
+      "signals": {
+        "commitDays": 27,
+        "missionsCompleted": 30,
+        "missionsFirstTry": 13
+      }
     },
     {
       "member": {
@@ -310,18 +1038,68 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 4 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 5 },
-        { "day": 8, "title": "Vector Databases Overview", "skipped": true },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 5 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 4 },
-        { "day": 20, "title": "Conversation Memory & Context Management", "passed": true, "attempts": 3 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "skipped": true },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "skipped": true },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 4 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "skipped": true
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 20,
+          "title": "Conversation Memory & Context Management",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "skipped": true
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "skipped": true
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 4
+        }
       ],
-      "signals": { "commitDays": 17, "missionsCompleted": 20, "missionsFirstTry": 1 }
+      "signals": {
+        "commitDays": 17,
+        "missionsCompleted": 20,
+        "missionsFirstTry": 1
+      }
     },
     {
       "member": {
@@ -333,18 +1111,70 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 1 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 1 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 1 },
-        { "day": 14, "title": "Fine-Tuning: Concepts & When to Use It", "skipped": true },
-        { "day": 15, "title": "Fine-Tuning: Hands-On with LoRA & QLoRA", "skipped": true },
-        { "day": 21, "title": "LangChain Agents", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 1 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 1 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 14,
+          "title": "Fine-Tuning: Concepts & When to Use It",
+          "skipped": true
+        },
+        {
+          "day": 15,
+          "title": "Fine-Tuning: Hands-On with LoRA & QLoRA",
+          "skipped": true
+        },
+        {
+          "day": 21,
+          "title": "LangChain Agents",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 29, "missionsCompleted": 29, "missionsFirstTry": 27 }
+      "signals": {
+        "commitDays": 29,
+        "missionsCompleted": 29,
+        "missionsFirstTry": 27
+      }
     },
     {
       "member": {
@@ -356,17 +1186,64 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 2 },
-        { "day": 7, "title": "Embeddings Explained", "passed": false, "attempts": 4 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 3 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": false, "attempts": 5 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 2 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": false, "attempts": 4 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "skipped": true },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "skipped": true },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 2 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": false,
+          "attempts": 4
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": false,
+          "attempts": 5
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": false,
+          "attempts": 4
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "skipped": true
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "skipped": true
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 2
+        }
       ],
-      "signals": { "commitDays": 19, "missionsCompleted": 21, "missionsFirstTry": 2 }
+      "signals": {
+        "commitDays": 19,
+        "missionsCompleted": 21,
+        "missionsFirstTry": 2
+      }
     },
     {
       "member": {
@@ -378,18 +1255,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 3 },
-        { "day": 3, "title": "First AI Project, React Frontend & GitHub", "passed": true, "attempts": 5 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 5 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 5 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 5 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 5 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 4 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 5 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 4 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 3 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 3,
+          "title": "First AI Project, React Frontend & GitHub",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 3
+        }
       ],
-      "signals": { "commitDays": 30, "missionsCompleted": 31, "missionsFirstTry": 1 }
+      "signals": {
+        "commitDays": 30,
+        "missionsCompleted": 31,
+        "missionsFirstTry": 1
+      }
     },
     {
       "member": {
@@ -401,18 +1332,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 1 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 1 },
-        { "day": 10, "title": "Retrieval & Matching Engine", "passed": true, "attempts": 1 },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 1 },
-        { "day": 13, "title": "Function Calling & Structured Outputs", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 1 },
-        { "day": 23, "title": "Model Context Protocol (MCP)", "passed": true, "attempts": 1 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "passed": true, "attempts": 1 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 10,
+          "title": "Retrieval & Matching Engine",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 13,
+          "title": "Function Calling & Structured Outputs",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 23,
+          "title": "Model Context Protocol (MCP)",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 31, "missionsCompleted": 31, "missionsFirstTry": 31 }
+      "signals": {
+        "commitDays": 31,
+        "missionsCompleted": 31,
+        "missionsFirstTry": 31
+      }
     },
     {
       "member": {
@@ -424,18 +1409,72 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 2 },
-        { "day": 4, "title": "Reading & Processing Structured Data", "passed": true, "attempts": 1 },
-        { "day": 7, "title": "Embeddings Explained", "passed": true, "attempts": 4 },
-        { "day": 8, "title": "Vector Databases Overview", "passed": true, "attempts": 3 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 1 },
-        { "day": 17, "title": "Chatbot Frontend Development", "passed": true, "attempts": 5 },
-        { "day": 19, "title": "Response Formatting & Rich Outputs", "passed": true, "attempts": 4 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 3 },
-        { "day": 28, "title": "Docker & Kubernetes Deployment", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 2 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 2
+        },
+        {
+          "day": 4,
+          "title": "Reading & Processing Structured Data",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 17,
+          "title": "Chatbot Frontend Development",
+          "passed": true,
+          "attempts": 5
+        },
+        {
+          "day": 19,
+          "title": "Response Formatting & Rich Outputs",
+          "passed": true,
+          "attempts": 4
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 3
+        },
+        {
+          "day": 28,
+          "title": "Docker & Kubernetes Deployment",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 2
+        }
       ],
-      "signals": { "commitDays": 26, "missionsCompleted": 29, "missionsFirstTry": 11 }
+      "signals": {
+        "commitDays": 26,
+        "missionsCompleted": 29,
+        "missionsFirstTry": 11
+      }
     },
     {
       "member": {
@@ -447,18 +1486,70 @@
         "status": "COMPLETED"
       },
       "missions": [
-        { "day": 1, "title": "VS Code & Python Environment Setup", "passed": true, "attempts": 1 },
-        { "day": 3, "title": "First AI Project, React Frontend & GitHub", "passed": true, "attempts": 1 },
-        { "day": 4, "title": "Reading & Processing Structured Data", "skipped": true },
-        { "day": 7, "title": "Embeddings Explained", "passed": false, "attempts": 2 },
-        { "day": 8, "title": "Vector Databases Overview", "skipped": true },
-        { "day": 12, "title": "Prompt Engineering Fundamentals", "passed": true, "attempts": 1 },
-        { "day": 16, "title": "Chatbot Backend & API Integration", "passed": true, "attempts": 1 },
-        { "day": 22, "title": "Multi-Agent Orchestration", "passed": true, "attempts": 1 },
-        { "day": 27, "title": "Security, Privacy & Guardrails", "passed": true, "attempts": 1 },
-        { "day": 31, "title": "Capstone Project & Final Demo", "passed": true, "attempts": 1 }
+        {
+          "day": 1,
+          "title": "VS Code & Python Environment Setup",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 3,
+          "title": "First AI Project, React Frontend & GitHub",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 4,
+          "title": "Reading & Processing Structured Data",
+          "skipped": true
+        },
+        {
+          "day": 7,
+          "title": "Embeddings Explained",
+          "passed": false,
+          "attempts": 2
+        },
+        {
+          "day": 8,
+          "title": "Vector Databases Overview",
+          "skipped": true
+        },
+        {
+          "day": 12,
+          "title": "Prompt Engineering Fundamentals",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 16,
+          "title": "Chatbot Backend & API Integration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 22,
+          "title": "Multi-Agent Orchestration",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 27,
+          "title": "Security, Privacy & Guardrails",
+          "passed": true,
+          "attempts": 1
+        },
+        {
+          "day": 31,
+          "title": "Capstone Project & Final Demo",
+          "passed": true,
+          "attempts": 1
+        }
       ],
-      "signals": { "commitDays": 24, "missionsCompleted": 27, "missionsFirstTry": 19 }
+      "signals": {
+        "commitDays": 24,
+        "missionsCompleted": 27,
+        "missionsFirstTry": 19
+      }
     }
   ]
 }

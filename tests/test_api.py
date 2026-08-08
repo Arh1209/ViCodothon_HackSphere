@@ -28,7 +28,7 @@ def test_get_candidates():
     assert response.status_code == 200
     candidates = response.json().get("candidates", [])
     assert len(candidates) >= 10
-    assert candidates[0]["member"]["id"] == "CAND-001"
+    assert any(c["member"]["id"] == "CAND-001" for c in candidates)
 
 def test_start_interview():
     candidates = load_candidates()

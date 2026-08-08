@@ -107,7 +107,8 @@ export default function CandidateSelector({
       setToastMessage(`Candidate "${addedCand.member.name}" added successfully!`);
       setTimeout(() => setToastMessage(null), 4000);
 
-      // Auto-select the newly added candidate
+      // Auto-select the newly added candidate and scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       if (onSelectCandidate) onSelectCandidate(addedCand);
       if (onCandidateAdded) onCandidateAdded(addedCand);
     } catch (err) {
