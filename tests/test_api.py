@@ -9,6 +9,8 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def clear_sessions():
     session_manager.clear_all()
+    from app.services.db_service import update_settings
+    update_settings(8, 4)
     yield
 
 def test_health_check():
