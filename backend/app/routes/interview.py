@@ -133,9 +133,7 @@ def get_all_sessions():
 # AUTH & SETTINGS ENDPOINTS
 # -------------------------------------------------------------
 
-@router.post("/admin/add-candidate")
-@router.post("/auth/register")
-def register_candidate(payload: Dict[str, Any]):
+def register_candidate_impl(payload: Dict[str, Any]):
     from app.services.db_service import register_user
     full_name = payload.get("full_name", "")
     email = payload.get("email", "")
@@ -151,9 +149,17 @@ def register_candidate(payload: Dict[str, Any]):
 
     try:
         cand = register_user(full_name, email, password, job_role, float(years_experience), education)
-        return {"candidate": cand, "message": "Candidate added successfully by Admin."}
+        return {"candidate": cand, "message": "Candidate created successfully."}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/admin/add-candidate")
+def add_candidate_endpoint(payload: Dict[str, Any]):
+    return register_candidate_impl(payload)
+
+@router.post("/auth/register")
+def register_candidate_endpoint(payload: Dict[str, Any]):
+    return register_candidate_impl(payload)
 
 @router.post("/auth/login")
 def login_candidate(payload: Dict[str, Any]):

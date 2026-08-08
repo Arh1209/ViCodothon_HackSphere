@@ -29,6 +29,9 @@ def run_verification():
     candidate = candidates[0] # CAND-001 Sarah Johnson
     session_id = "live-verify-session-999"
 
+    # Reset settings to default 8 questions and 4 days for test predictability
+    httpx.post(f"{BACKEND_URL}/api/settings", json={"min_questions": 8, "min_curriculum_days": 4}, headers=HEADERS, timeout=5.0)
+
     print(f"\n=== STEP 4: Test POST /api/interview (Start Interview with candidate {candidate['member']['name']}) ===")
     start_payload = {
         "sessionId": session_id,
