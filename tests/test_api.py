@@ -9,8 +9,13 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def clear_sessions():
     session_manager.clear_all()
-    from app.services.db_service import update_settings
+    from app.services.db_service import update_settings, get_db_connection
     update_settings(8, 4)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM deleted_candidates")
+    conn.commit()
+    conn.close()
     yield
 
 def test_health_check():

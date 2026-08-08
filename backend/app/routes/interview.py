@@ -158,6 +158,8 @@ def add_candidate_endpoint(payload: Dict[str, Any]):
     return register_candidate_impl(payload)
 
 @router.delete("/admin/candidate/{candidate_id}")
+@router.post("/admin/candidate/{candidate_id}/delete")
+@router.post("/admin/delete-candidate/{candidate_id}")
 def delete_candidate_endpoint(candidate_id: str):
     from app.services.db_service import delete_candidate_db
     try:
