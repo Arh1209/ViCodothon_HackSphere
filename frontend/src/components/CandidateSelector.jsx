@@ -39,8 +39,7 @@ export default function CandidateSelector({
     job_role: '',
     years_experience: 3,
     education: 'BS Computer Science',
-    skills: '',
-    resume: ''
+    skills: ''
   });
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState(null);
@@ -109,8 +108,7 @@ export default function CandidateSelector({
         job_role: '',
         years_experience: 3,
         education: 'BS Computer Science',
-        skills: '',
-        resume: ''
+        skills: ''
       });
       
       // Reset search filters so the newly added candidate is not hidden
@@ -626,18 +624,6 @@ export default function CandidateSelector({
                   placeholder="e.g. Python, PyTorch, FastAPI, Vector Search, MCP"
                   value={addForm.skills}
                   onChange={(e) => setAddForm({ ...addForm, skills: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Resume Link / Document Reference</label>
-                <input 
-                  type="text" 
-                  className="chat-input" 
-                  style={{ width: '100%' }}
-                  placeholder="https://drive.google.com/resume.pdf or summary text"
-                  value={addForm.resume}
-                  onChange={(e) => setAddForm({ ...addForm, resume: e.target.value })}
                 />
               </div>
 

@@ -249,7 +249,7 @@ def test_add_candidate_form_validation_and_persistence():
     })
     assert invalid_resp.status_code == 400
 
-    # 2. Successfully add candidate with full fields (Full Name, Email, Phone, Resume, Skills, Experience, Education, Position)
+    # 2. Successfully add candidate with fields (Full Name, Email, Phone, Skills, Experience, Education, Position)
     payload = {
         "full_name": "Marcus Vance",
         "email": unique_email,
@@ -257,8 +257,7 @@ def test_add_candidate_form_validation_and_persistence():
         "position": "Principal AI Architect",
         "years_experience": 10.5,
         "education": "PhD Computer Science",
-        "skills": "Python, PyTorch, Vector Search, MCP, FastAPI",
-        "resume": "https://example.com/resumes/marcus.pdf"
+        "skills": "Python, PyTorch, Vector Search, MCP, FastAPI"
     }
     add_resp = client.post("/api/admin/add-candidate", json=payload)
     assert add_resp.status_code == 200
@@ -266,7 +265,6 @@ def test_add_candidate_form_validation_and_persistence():
     assert added_cand["member"]["name"] == "Marcus Vance"
     assert added_cand["member"]["jobRole"] == "Principal AI Architect"
     assert added_cand["member"]["phone"] == "+1 (555) 234-5678"
-    assert added_cand["member"]["resume"] == "https://example.com/resumes/marcus.pdf"
     assert "PyTorch" in added_cand["member"]["skills"]
 
     # 3. Verify newly added candidate immediately appears in candidates list
