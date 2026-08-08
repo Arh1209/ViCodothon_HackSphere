@@ -377,16 +377,10 @@ export default function App() {
               feedback={feedback}
               onRestart={() => setView('selector')}
             />
-          ) : !currentUser && authView === 'login' ? (
+          ) : !currentUser ? (
             <CandidateLogin
               onLoginSuccess={handleCandidateLoginSuccess}
-              onSwitchToRegister={() => setAuthView('register')}
               onSwitchToAdmin={() => setUserRole('admin')}
-            />
-          ) : !currentUser && authView === 'register' ? (
-            <CandidateRegister
-              onRegisterSuccess={handleCandidateRegisterSuccess}
-              onSwitchToLogin={() => setAuthView('login')}
             />
           ) : (
             <CandidateDashboard
@@ -533,6 +527,7 @@ export default function App() {
                 selectedCandidate={selectedCandidate}
                 onSelectCandidate={setSelectedCandidate}
                 onStartInterview={() => handleStartInterview()}
+                onCandidateAdded={loadCandidatesList}
                 loading={loading}
               />
             ) : activeTab === 'interviews' ? (

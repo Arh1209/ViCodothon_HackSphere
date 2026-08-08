@@ -133,6 +133,7 @@ def get_all_sessions():
 # AUTH & SETTINGS ENDPOINTS
 # -------------------------------------------------------------
 
+@router.post("/admin/add-candidate")
 @router.post("/auth/register")
 def register_candidate(payload: Dict[str, Any]):
     from app.services.db_service import register_user
@@ -144,13 +145,13 @@ def register_candidate(payload: Dict[str, Any]):
     education = payload.get("education", "")
 
     if not full_name or not email or not password or not job_role:
-        raise HTTPException(status_code=400, detail="Missing required registration fields.")
+        raise HTTPException(status_code=400, detail="Missing required candidate fields (Full Name, Email, Password, Job Role).")
     if len(password) < 6:
         raise HTTPException(status_code=400, detail="Password must be at least 6 characters.")
 
     try:
         cand = register_user(full_name, email, password, job_role, float(years_experience), education)
-        return {"candidate": cand, "message": "Candidate registered successfully."}
+        return {"candidate": cand, "message": "Candidate added successfully by Admin."}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

@@ -17,8 +17,27 @@ const AVATAR_COLORS = [
   { bg: 'linear-gradient(135deg, #3b82f6, #6366f1)', border: '#60a5fa', text: '#dbeafe' }, // CAND-010
 ];
 
-export default function CandidateSelector({ candidates, selectedCandidate, onSelectCandidate, onStartInterview, loading }) {
+export default function CandidateSelector({ 
+  candidates, 
+  selectedCandidate, 
+  onSelectCandidate, 
+  onStartInterview, 
+  onCandidateAdded,
+  loading 
+}) {
   const [profileModalCandidate, setProfileModalCandidate] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addForm, setAddForm] = useState({
+    full_name: '',
+    email: '',
+    password: '',
+    job_role: '',
+    years_experience: 3,
+    education: 'BS Computer Science'
+  });
+  const [addLoading, setAddLoading] = useState(false);
+  const [addError, setAddError] = useState(null);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
   const [expFilter, setExpFilter] = useState('ALL');
@@ -29,6 +48,35 @@ export default function CandidateSelector({ candidates, selectedCandidate, onSel
     const parts = name.split(' ');
     if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
     return name.substring(0, 2).toUpperCase();
+  };
+
+  const handleAddSubmit = async (e) => {
+    e.preventDefault();
+    if (!addForm.full_name || !addForm.email || !addForm.password || !addForm.job_role) {
+      setAddError('Please fill in all required fields.');
+      return;
+    }
+    if (addForm.password.length < 6) {
+      setAddError('Password must be at least 6 characters.');
+      return;
+    }
+
+    setAddLoading(true);
+    setAddError(null);
+    try {
+      const { addCandidate } = await import('../services/api');
+      const res = await addCandidate({
+        ...addForm,
+        years_experience: parseFloat(addForm.years_experience) || 0
+      });
+      setShowAddModal(false);
+      setAddForm({ full_name: '', email: '', password: '', job_role: '', years_experience: 3, education: 'BS Computer Science' });
+      if (onCandidateAdded) onCandidateAdded(res.candidate);
+    } catch (err) {
+      setAddError(err.message || 'Failed to add candidate.');
+    } finally {
+      setAddLoading(false);
+    }
   };
 
   // Extract distinct roles for dropdown filter
@@ -68,40 +116,47 @@ export default function CandidateSelector({ candidates, selectedCandidate, onSel
       if (sortBy === 'EXPERIENCE_DESC') return (bMem.yearsExperience || 0) - (aMem.yearsExperience || 0);
       if (sortBy === 'NAME_ASC') return (aMem.name || '').localeCompare(bMem.name || '');
       if (sortBy === 'COMPLETION_DESC') return (bSig.missionsCompleted || 0) - (aSig.missionsCompleted || 0);
-      return 0; // Default RECOMMENDED order
+      return 0;
     });
   }, [candidates, searchQuery, roleFilter, expFilter, sortBy]);
 
   return (
     <div className="candidate-selector-container">
       {/* Header Section */}
-      <div className="page-header">
-        <h1 className="hero-heading">
-          Select a <span className="gradient-text">Candidate</span> for Interview
-        </h1>
-        <p className="hero-subtext">
-          Choose a candidate from the cohort dataset. The AI interviewer will personalize questions, difficulty, and technical focus based on their background.
-        </p>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 className="hero-heading">
+            Manage <span className="gradient-text">Candidates</span> ({candidates.length})
+          </h1>
+          <p className="hero-subtext">
+            Select a candidate to launch an interview or add a new candidate account to the evaluation cohort.
+          </p>
 
-        {/* Feature Badges */}
-        <div className="feature-badges-row">
-          <div className="feature-badge">
-            <Sparkles size={14} className="badge-icon purple" />
-            <span>Personalized Questions</span>
-          </div>
-          <div className="feature-badge">
-            <Sliders size={14} className="badge-icon cyan" />
-            <span>Adaptive Difficulty</span>
-          </div>
-          <div className="feature-badge">
-            <Cpu size={14} className="badge-icon emerald" />
-            <span>Deep Technical Focus</span>
-          </div>
-          <div className="feature-badge">
-            <BarChart3 size={14} className="badge-icon amber" />
-            <span>Actionable Feedback</span>
+          {/* Feature Badges */}
+          <div className="feature-badges-row">
+            <div className="feature-badge">
+              <Sparkles size={14} className="badge-icon purple" />
+              <span>Personalized Questions</span>
+            </div>
+            <div className="feature-badge">
+              <Sliders size={14} className="badge-icon cyan" />
+              <span>Adaptive Difficulty</span>
+            </div>
+            <div className="feature-badge">
+              <Cpu size={14} className="badge-icon emerald" />
+              <span>Deep Technical Focus</span>
+            </div>
           </div>
         </div>
+
+        {/* Admin Add Candidate Button */}
+        <button 
+          className="btn btn-primary"
+          onClick={() => setShowAddModal(true)}
+          style={{ padding: '0.75rem 1.25rem', fontSize: '0.9rem' }}
+        >
+          <User size={16} /> + Add Candidate
+        </button>
       </div>
 
       {/* Filter & Search Bar */}
@@ -384,6 +439,123 @@ export default function CandidateSelector({ candidates, selectedCandidate, onSel
                 <Play size={14} /> Start Interview for {profileModalCandidate.member.name}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin Add Candidate Modal */}
+      {showAddModal && (
+        <div className="modal-backdrop" onClick={() => setShowAddModal(false)}>
+          <div className="modal-content glass-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '540px' }}>
+            <div className="modal-header">
+              <div>
+                <h2 style={{ fontSize: '1.25rem', color: '#fff' }}>Add New Candidate (Admin)</h2>
+                <p style={{ fontSize: '0.85rem', color: '#a5b4fc' }}>Register candidate credentials and technical evaluation profile.</p>
+              </div>
+              <button className="modal-close-btn" onClick={() => setShowAddModal(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {addError && (
+              <div style={{ padding: '0.75rem 1rem', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#fca5a5', borderRadius: '10px', fontSize: '0.85rem', marginTop: '1rem' }}>
+                {addError}
+              </div>
+            )}
+
+            <form onSubmit={handleAddSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+              <div>
+                <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Full Name *</label>
+                <input 
+                  type="text" 
+                  className="chat-input" 
+                  style={{ width: '100%' }}
+                  placeholder="e.g. Alex Rivera"
+                  value={addForm.full_name}
+                  onChange={(e) => setAddForm({ ...addForm, full_name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Email Address *</label>
+                  <input 
+                    type="email" 
+                    className="chat-input" 
+                    style={{ width: '100%' }}
+                    placeholder="alex@example.com"
+                    value={addForm.email}
+                    onChange={(e) => setAddForm({ ...addForm, email: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Password *</label>
+                  <input 
+                    type="password" 
+                    className="chat-input" 
+                    style={{ width: '100%' }}
+                    placeholder="••••••••"
+                    value={addForm.password}
+                    onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Target Job Role *</label>
+                  <input 
+                    type="text" 
+                    className="chat-input" 
+                    style={{ width: '100%' }}
+                    placeholder="e.g. AI Engineer"
+                    value={addForm.job_role}
+                    onChange={(e) => setAddForm({ ...addForm, job_role: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Years Experience *</label>
+                  <input 
+                    type="number" 
+                    className="chat-input" 
+                    style={{ width: '100%' }}
+                    value={addForm.years_experience}
+                    onChange={(e) => setAddForm({ ...addForm, years_experience: e.target.value })}
+                    min="0"
+                    max="40"
+                    step="0.5"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Highest Education</label>
+                <input 
+                  type="text" 
+                  className="chat-input" 
+                  style={{ width: '100%' }}
+                  placeholder="e.g. MS Computer Science"
+                  value={addForm.education}
+                  onChange={(e) => setAddForm({ ...addForm, education: e.target.value })}
+                />
+              </div>
+
+              <div className="modal-footer" style={{ marginTop: '0.5rem' }}>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={addLoading}>
+                  {addLoading ? 'Creating Candidate...' : 'Create Candidate'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

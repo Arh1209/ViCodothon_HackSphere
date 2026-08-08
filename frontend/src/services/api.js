@@ -64,17 +64,21 @@ export async function fetchHealth() {
   return await res.json();
 }
 
-export async function registerCandidate(userData) {
-  const res = await fetch(`${API_BASE}/auth/register`, {
+export async function addCandidate(userData) {
+  const res = await fetch(`${API_BASE}/admin/add-candidate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData)
   });
   if (!res.ok) {
     const errData = await res.json().catch(() => ({}));
-    throw new Error(errData.detail || 'Registration failed.');
+    throw new Error(errData.detail || 'Failed to add candidate.');
   }
   return await res.json();
+}
+
+export async function registerCandidate(userData) {
+  return addCandidate(userData);
 }
 
 export async function loginCandidate(credentials) {

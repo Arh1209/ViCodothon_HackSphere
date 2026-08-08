@@ -90,14 +90,7 @@ export default function CandidateLogin({ onLoginSuccess, onSwitchToRegister, onS
           </button>
         </form>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', fontSize: '0.85rem' }}>
-          <button 
-            onClick={onSwitchToRegister}
-            style={{ background: 'none', border: 'none', color: '#38bdf8', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 500 }}
-          >
-            <UserPlus size={14} /> New? Register Account
-          </button>
-
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', fontSize: '0.85rem' }}>
           <button 
             onClick={onSwitchToAdmin}
             style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
