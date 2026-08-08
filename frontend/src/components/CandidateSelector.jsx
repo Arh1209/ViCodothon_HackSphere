@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { 
   User, Briefcase, GraduationCap, Award, Play, Eye, X, Search, Filter, ArrowUpDown, Trash2,
-  Sparkles, Sliders, Cpu, BarChart3, CheckCircle2, AlertCircle, Clock, BookOpen, Layers, ShieldCheck
+  Sparkles, Sliders, Cpu, BarChart3, CheckCircle2, AlertCircle, Clock, BookOpen, Layers, ShieldCheck, UserCheck
 } from 'lucide-react';
 
 const AVATAR_COLORS = [
@@ -95,8 +95,21 @@ export default function CandidateSelector({
         years_experience: parseFloat(addForm.years_experience) || 0
       });
       setShowAddModal(false);
+      const addedCand = res.candidate;
       setAddForm({ full_name: '', email: '', password: '', job_role: '', years_experience: 3, education: 'BS Computer Science' });
-      if (onCandidateAdded) onCandidateAdded(res.candidate);
+      
+      // Reset search filters so the newly added candidate is not hidden
+      setSearchQuery('');
+      setRoleFilter('ALL');
+      setExpFilter('ALL');
+
+      // Show success toast notification
+      setToastMessage(`Candidate "${addedCand.member.name}" added successfully!`);
+      setTimeout(() => setToastMessage(null), 4000);
+
+      // Auto-select the newly added candidate
+      if (onSelectCandidate) onSelectCandidate(addedCand);
+      if (onCandidateAdded) onCandidateAdded(addedCand);
     } catch (err) {
       setAddError(err.message || 'Failed to add candidate.');
     } finally {
@@ -270,11 +283,15 @@ export default function CandidateSelector({
                 <div className="card-top-bar">
                   <span className="candidate-id-badge">{member.id}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    {isRecommended && (
+                    {cand.isRegisteredUser || member.status === 'REGISTERED' ? (
+                      <span className="recommended-badge" style={{ background: 'rgba(168, 85, 247, 0.2)', border: '1px solid rgba(168, 85, 247, 0.4)', color: '#e9d5ff' }}>
+                        <UserCheck size={12} /> Registered
+                      </span>
+                    ) : isRecommended ? (
                       <span className="recommended-badge">
                         <Sparkles size={12} /> Recommended
                       </span>
-                    )}
+                    ) : null}
                     <button 
                       className="btn-delete-icon" 
                       onClick={(e) => {

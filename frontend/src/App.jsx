@@ -67,12 +67,14 @@ export default function App() {
     ]);
   };
 
-  const loadCandidatesList = async () => {
+  const loadCandidatesList = async (newCandidate = null) => {
     try {
       setLoading(true);
       const data = await fetchCandidates();
       setCandidates(data);
-      if (data.length > 0 && !selectedCandidate) {
+      if (newCandidate) {
+        setSelectedCandidate(newCandidate);
+      } else if (data.length > 0 && !selectedCandidate) {
         setSelectedCandidate(data[0]);
       }
     } catch (err) {
@@ -519,7 +521,7 @@ export default function App() {
                 selectedCandidate={selectedCandidate}
                 onSelectCandidate={setSelectedCandidate}
                 onStartInterview={() => handleStartInterview()}
-                onCandidateAdded={loadCandidatesList}
+                onCandidateAdded={(cand) => loadCandidatesList(cand)}
                 loading={loading}
               />
             ) : activeTab === 'interviews' ? (
