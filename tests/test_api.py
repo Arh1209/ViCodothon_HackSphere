@@ -14,9 +14,15 @@ def clear_sessions():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM deleted_candidates")
+    cursor.execute("DELETE FROM users WHERE full_name LIKE '%Test%' OR full_name LIKE '%Delete%' OR full_name = 'Marcus Vance' OR email LIKE '%delcand%' OR email LIKE '%new_cand%'")
     conn.commit()
     conn.close()
     yield
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE full_name LIKE '%Test%' OR full_name LIKE '%Delete%' OR full_name = 'Marcus Vance' OR email LIKE '%delcand%' OR email LIKE '%new_cand%'")
+    conn.commit()
+    conn.close()
 
 def test_health_check():
     response = client.get("/health")
@@ -193,6 +199,10 @@ def test_candidate_registration_and_login():
     bad_login = client.post("/api/auth/login", json={"email": email, "password": "wrongpassword"})
     assert bad_login.status_code == 401
 
+    # 5. Clean up test candidate
+    cand_id = reg_data["candidate"]["member"]["id"]
+    client.delete(f"/api/admin/candidate/{cand_id}")
+
 def test_settings_get_and_update_validation():
     # 1. Get settings
     get_resp = client.get("/api/settings")
@@ -213,10 +223,12 @@ def test_settings_get_and_update_validation():
     assert new_settings["min_curriculum_days"] == 5
 
 def test_delete_candidate():
+    import time
+    unique_email = f"delcand_{int(time.time() * 1000)}@example.com"
     # 1. Register candidate to delete
     cand = client.post("/api/admin/add-candidate", json={
         "full_name": "Candidate To Delete",
-        "email": "delcand@example.com",
+        "email": unique_email,
         "password": "password123",
         "job_role": "Tester",
         "years_experience": 2,

@@ -106,6 +106,16 @@ def delete_candidate_db(candidate_id: str) -> bool:
     conn.close()
     return True
 
+def hard_delete_candidate_db(candidate_id: str) -> bool:
+    init_db()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE candidate_id = ?", (candidate_id,))
+    cursor.execute("DELETE FROM deleted_candidates WHERE candidate_id = ?", (candidate_id,))
+    conn.commit()
+    conn.close()
+    return True
+
 def restore_candidate_db(candidate_id: str) -> bool:
     init_db()
     conn = get_db_connection()
@@ -141,9 +151,10 @@ def register_user(
         conn.close()
         raise ValueError("Candidate with this email already exists.")
 
-    cand_count_cursor = cursor.execute("SELECT COUNT(*) as cnt FROM users")
-    cnt = cand_count_cursor.fetchone()['cnt']
-    cand_id = f"CAND-REG-{cnt + 101:03d}"
+    max_id_cursor = cursor.execute("SELECT MAX(id) as max_id FROM users")
+    row = max_id_cursor.fetchone()
+    max_id = (row['max_id'] if row and row['max_id'] is not None else 0)
+    cand_id = f"CAND-REG-{max_id + 101:03d}"
     pwd = password if password else "password123"
     pwd_hash = hash_password(pwd)
     now = time.time()
