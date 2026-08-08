@@ -18,6 +18,13 @@ Traditional technical interview tools follow rigid, predetermined question lists
 ```mermaid
 flowchart TD
     User([User / Candidate]) <-->|HTTP / JSON| ReactFrontend[React + Vite Frontend]
+    
+    subgraph ReactFrontend UI
+        Selector[Candidate Selector]
+        Chat[Chat Interface + Optional Voice Input]
+        FeedbackView[Feedback Screen]
+    end
+
     ReactFrontend <-->|POST /api/interview| FastAPIBackend[FastAPI Backend Engine]
     
     subgraph FastAPI Backend
@@ -34,16 +41,16 @@ flowchart TD
     AIEngine --> Evaluator
     AIEngine --> Prompts
     AIEngine --> DataLoader
-    AIEngine <-->|Google GenAI REST / SDK| GeminiAPI[Gemini 2.5 API]
+    AIEngine <-->|Google GenAI REST / SDK| GeminiAPI[Gemini 2.5 API / Fallback Engine]
 ```
 
 ---
 
 ## 3. Technology Stack
 
-- **Frontend**: React 18, Vite, Lucide Icons, Vanilla CSS (Glassmorphism design system with dark mode & gradients).
+- **Frontend**: React 18, Vite, Lucide Icons, Vanilla CSS (Glassmorphism design system with dark mode & gradients), Web Speech API for optional voice transcription.
 - **Backend**: Python 3.11+, FastAPI, Pydantic V2, Uvicorn, HTTPX.
-- **AI Integration**: Gemini API (`GEMINI_API_KEY`) with deterministic fallback engine for offline testing.
+- **AI Integration**: Gemini API (`GEMINI_API_KEY`) with deterministic rule-based fallback engine for offline testing.
 - **Testing**: Pytest & FastAPI TestClient.
 - **Deployment**: Docker containerization (`Dockerfile`).
 
@@ -71,7 +78,7 @@ Ai_Interview/
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── CandidateSelector.jsx
-│   │   │   ├── ChatInterface.jsx
+│   │   │   ├── ChatInterface.jsx   # Chat UI + Optional Voice Input button
 │   │   │   └── FeedbackView.jsx
 │   │   ├── services/
 │   │   │   └── api.js           # API client layer
@@ -180,39 +187,55 @@ POST /api/interview
 2. Set your Gemini API key in `.env`:
    ```env
    GEMINI_API_KEY=your_actual_gemini_api_key
+   PORT=8000
    ```
 
 ### Running Backend (FastAPI)
 ```bash
-$env:PYTHONPATH="backend"
 python -m uvicorn backend.app.main:app --reload --port 8000
 ```
-Backend API will be live at `http://localhost:8000`.
+Backend API will be live at `http://127.0.0.1:8000`.
 
 ### Running Frontend (React Vite)
 ```bash
 cd frontend
 npm run dev
 ```
-Frontend UI will be live at `http://localhost:3000`.
+Frontend UI will be live at `http://127.0.0.1:3000`.
 
 ---
 
-## 7. Running Automated Tests
+## 7. Voice-to-Text Optional Input Feature
+
+The candidate can dictate answers via an optional microphone button:
+1. Click `🎤 Speak Answer` beside the input box.
+2. Grant browser microphone permission.
+3. Spoken text is transcribed into the answer input field via native Web Speech API (`SpeechRecognition`).
+4. Candidate reviews/edits transcribed text before clicking `Send Answer`.
+5. **No auto-submit**: The candidate explicitly clicks Send Answer.
+6. **Graceful Fallback**: Text input remains 100% operational if microphone permission is denied or speech recognition is unsupported by the browser.
+
+---
+
+## 8. Running Automated Tests
 
 Run the full pytest suite:
 ```bash
-$env:PYTHONPATH="backend"
 python -m pytest tests/
+```
+
+Run end-to-end verification script:
+```bash
+python verify_app.py
 ```
 
 ---
 
-## 8. Docker Deployment
+## 9. Docker Deployment
 
 Build and run containerized application:
 ```bash
 docker build -t interview-agent .
 docker run -p 8000:8000 -e GEMINI_API_KEY="your_api_key" interview-agent
 ```
-Access app at `http://localhost:8000`.
+Access app at `http://127.0.0.1:8000`.
