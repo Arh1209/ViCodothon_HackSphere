@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { 
-  User, Briefcase, GraduationCap, Award, Play, Eye, X, Search, Filter, ArrowUpDown, Trash2,
+  User, Briefcase, GraduationCap, Award, Play, Eye, X, Search, Filter, ArrowUpDown, Trash2, RotateCcw,
   Sparkles, Sliders, Cpu, BarChart3, CheckCircle2, AlertCircle, Clock, BookOpen, Layers, ShieldCheck, UserCheck
 } from 'lucide-react';
 
@@ -30,6 +30,7 @@ export default function CandidateSelector({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+  const [undoCandidate, setUndoCandidate] = useState(null);
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({
@@ -46,7 +47,8 @@ export default function CandidateSelector({
 
   const handleConfirmDelete = async () => {
     if (!deleteConfirmCandidate) return;
-    const candId = deleteConfirmCandidate.member?.id;
+    const cand = deleteConfirmCandidate;
+    const candId = cand.member?.id;
     setDeleteLoading(true);
     setDeleteError(null);
 
@@ -54,13 +56,35 @@ export default function CandidateSelector({
       const { deleteCandidate } = await import('../services/api');
       await deleteCandidate(candId);
       setDeleteConfirmCandidate(null);
-      setToastMessage("Candidate deleted successfully.");
-      setTimeout(() => setToastMessage(null), 3000);
+      setUndoCandidate(cand);
+      setToastMessage(`Candidate "${cand.member?.name || 'Item'}" deleted.`);
+
+      setTimeout(() => {
+        setToastMessage(null);
+        setUndoCandidate(null);
+      }, 6000);
+
       if (onCandidateAdded) onCandidateAdded();
     } catch (err) {
       setDeleteError(err.message || "Failed to delete candidate.");
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const handleUndoDelete = async () => {
+    if (!undoCandidate) return;
+    const cand = undoCandidate;
+    setUndoCandidate(null);
+    try {
+      const { restoreCandidate } = await import('../services/api');
+      await restoreCandidate(cand.member?.id);
+      setToastMessage(`Restored candidate "${cand.member?.name || ''}" successfully!`);
+      setTimeout(() => setToastMessage(null), 4000);
+      if (onCandidateAdded) onCandidateAdded(cand);
+    } catch (err) {
+      setToastMessage("Failed to restore candidate.");
+      setTimeout(() => setToastMessage(null), 3000);
     }
   };
 
@@ -685,26 +709,52 @@ export default function CandidateSelector({
         </div>
       )}
 
-      {/* Success Toast Notification */}
+      {/* Toast Notification with Undo option */}
       {toastMessage && (
         <div style={{
           position: 'fixed',
           bottom: '2rem',
           right: '2rem',
           background: 'rgba(15, 23, 42, 0.95)',
-          border: '1px solid #34d399',
-          color: '#34d399',
-          padding: '0.75rem 1.25rem',
+          border: undoCandidate ? '1px solid #818cf8' : '1px solid #34d399',
+          color: '#fff',
+          padding: '0.85rem 1.25rem',
           borderRadius: '12px',
           boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem',
+          gap: '1rem',
           fontSize: '0.9rem',
           fontWeight: 600,
-          zIndex: 2000
+          zIndex: 2000,
+          backdropFilter: 'blur(12px)'
         }}>
-          <CheckCircle2 size={18} /> {toastMessage}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: undoCandidate ? '#fca5a5' : '#34d399' }}>
+            {undoCandidate ? <Trash2 size={18} color="#fca5a5" /> : <CheckCircle2 size={18} color="#34d399" />}
+            <span>{toastMessage}</span>
+          </div>
+
+          {undoCandidate && (
+            <button
+              onClick={handleUndoDelete}
+              style={{
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                border: 'none',
+                color: '#fff',
+                padding: '0.4rem 0.9rem',
+                borderRadius: '8px',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                boxShadow: '0 2px 8px rgba(99, 102, 241, 0.4)'
+              }}
+            >
+              <RotateCcw size={14} /> Undo
+            </button>
+          )}
         </div>
       )}
     </div>

@@ -188,6 +188,17 @@ def delete_candidate_endpoint(candidate_id: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to delete candidate: {str(e)}")
 
+@router.post("/admin/candidate/{candidate_id}/restore")
+@router.post("/admin/candidate/{candidate_id}/undo-delete")
+@router.post("/admin/restore-candidate/{candidate_id}")
+def restore_candidate_endpoint(candidate_id: str):
+    from app.services.db_service import restore_candidate_db
+    try:
+        restore_candidate_db(candidate_id)
+        return {"candidateId": candidate_id, "message": "Candidate restored successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to restore candidate: {str(e)}")
+
 @router.post("/auth/register")
 def register_candidate_endpoint(payload: Dict[str, Any]):
     return register_candidate_impl(payload)

@@ -97,14 +97,20 @@ def delete_candidate_db(candidate_id: str) -> bool:
     init_db()
     conn = get_db_connection()
     cursor = conn.cursor()
-
-    # 1. Delete from users table if present
-    cursor.execute("DELETE FROM users WHERE candidate_id = ?", (candidate_id,))
     
-    # 2. Record in deleted_candidates table
+    # Record in deleted_candidates table (Soft delete)
     now = time.time()
     cursor.execute("INSERT OR REPLACE INTO deleted_candidates (candidate_id, deleted_at) VALUES (?, ?)", (candidate_id, now))
 
+    conn.commit()
+    conn.close()
+    return True
+
+def restore_candidate_db(candidate_id: str) -> bool:
+    init_db()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM deleted_candidates WHERE candidate_id = ?", (candidate_id,))
     conn.commit()
     conn.close()
     return True

@@ -88,6 +88,17 @@ export async function deleteCandidate(candidateId) {
   return await res.json();
 }
 
+export async function restoreCandidate(candidateId) {
+  const res = await fetch(`${API_BASE}/admin/restore-candidate/${candidateId}`, {
+    method: 'POST'
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || 'Failed to restore candidate.');
+  }
+  return await res.json();
+}
+
 export async function registerCandidate(userData) {
   return addCandidate(userData);
 }

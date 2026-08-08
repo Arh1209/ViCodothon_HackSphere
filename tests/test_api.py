@@ -238,6 +238,18 @@ def test_delete_candidate():
     candidates_after = client.get("/api/candidates").json()["candidates"]
     assert not any(c["member"]["id"] == cand_id for c in candidates_after)
 
+    # 4. Undo delete (Restore candidate)
+    restore_resp = client.post(f"/api/admin/restore-candidate/{cand_id}")
+    assert restore_resp.status_code == 200
+    assert restore_resp.json()["candidateId"] == cand_id
+
+    # 5. Verify candidate is restored to candidate list
+    candidates_restored = client.get("/api/candidates").json()["candidates"]
+    assert any(c["member"]["id"] == cand_id for c in candidates_restored)
+
+    # Clean up test candidate
+    client.delete(f"/api/admin/candidate/{cand_id}")
+
 def test_add_candidate_form_validation_and_persistence():
     import time
     unique_email = f"new_cand_{int(time.time())}@example.com"
