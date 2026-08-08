@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  Users, MessageSquare, CheckCircle2, Clock, Play, HelpCircle, 
+  Users, User, MessageSquare, CheckCircle2, Clock, Play, HelpCircle, 
   BookOpen, Sparkles, ArrowRight, Activity, Award, ShieldCheck, ChevronRight
 } from 'lucide-react';
 
@@ -9,6 +9,7 @@ export default function DashboardView({
   sessions, 
   settings = { min_questions: 8, min_curriculum_days: 4 },
   onStartNewInterview, 
+  onAddNewCandidate,
   onViewSessionDetail,
   onSelectCandidate
 }) {
@@ -55,9 +56,14 @@ export default function DashboardView({
             Real-time personalized technical evaluations powered by dynamic adaptive AI, cohort learning signals, and multi-turn context.
           </p>
 
-          <button className="btn btn-primary" onClick={onStartNewInterview} style={{ padding: '0.75rem 1.5rem' }}>
-            <Play size={16} fill="currentColor" /> Start New Technical Interview
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-primary" onClick={onStartNewInterview} style={{ padding: '0.75rem 1.5rem' }}>
+              <Play size={16} fill="currentColor" /> Start New Technical Interview
+            </button>
+            <button className="btn btn-secondary" onClick={onAddNewCandidate} style={{ padding: '0.75rem 1.25rem', background: 'rgba(99, 102, 241, 0.2)', borderColor: '#818cf8', color: '#e0e7ff' }}>
+              <User size={16} /> + Add Candidate
+            </button>
+          </div>
         </div>
       </div>
 

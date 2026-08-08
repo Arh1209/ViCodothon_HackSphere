@@ -299,15 +299,6 @@ export default function App() {
 
         {/* Header Tagline & Activity Feed */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {userRole === 'candidate' && (
-            <button 
-              className="btn btn-secondary"
-              onClick={() => { setUserRole('admin'); }}
-              style={{ fontSize: '0.82rem', padding: '0.4rem 0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
-            >
-              <Shield size={14} color="#a855f7" /> Admin Portal View
-            </button>
-          )}
 
           <button 
             className="btn btn-secondary" 
@@ -517,6 +508,7 @@ export default function App() {
                 sessions={sessions}
                 settings={settings}
                 onStartNewInterview={() => { setActiveTab('candidates'); setView('selector'); }}
+                onAddNewCandidate={() => { setActiveTab('candidates'); setView('selector'); }}
                 onViewSessionDetail={(sid) => { setActiveTab('interviews'); }}
                 onSelectCandidate={(c) => { setSelectedCandidate(c); setActiveTab('candidates'); setView('selector'); }}
               />
