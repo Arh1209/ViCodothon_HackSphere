@@ -3,12 +3,16 @@ import { fetchCandidates, startInterview, sendInterviewTurn, getSessionDebug } f
 import CandidateSelector from './components/CandidateSelector';
 import ChatInterface from './components/ChatInterface';
 import FeedbackView from './components/FeedbackView';
-import { Bot } from 'lucide-react';
+import { 
+  Bot, LayoutDashboard, Users, MessageSquare, BarChart3, Settings, 
+  ChevronRight, Shield, Zap, Sparkles 
+} from 'lucide-react';
 
 export default function App() {
   const [candidates, setCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [view, setView] = useState('selector'); // 'selector' | 'chat' | 'feedback'
+  const [activeTab, setActiveTab] = useState('candidates');
   
   const [sessionId, setSessionId] = useState('');
   const [messages, setMessages] = useState([]);
@@ -100,56 +104,142 @@ export default function App() {
   };
 
   return (
-    <div className="app-container">
-      {/* Top Navbar */}
-      <header className="navbar">
-        <div className="logo">
-          <Bot size={28} color="#6366f1" />
-          <span>THE INTERVIEW AGENT</span>
+    <div className="saas-app-layout">
+      {/* Top Header */}
+      <header className="saas-header">
+        <div className="logo-brand">
+          <div className="logo-icon-glow">
+            <Bot size={26} color="#818cf8" />
+          </div>
+          <span className="brand-title">THE INTERVIEW AGENT</span>
         </div>
-        <div className="tagline-badge">
-          Build the interviewer, not the interview
+
+        <div className="header-tagline-badge">
+          <Sparkles size={13} color="#a5b4fc" />
+          <span>Build the interviewer, not the interview.</span>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="main-wrapper">
-        {error && (
-          <div className="glass-card" style={{ borderLeft: '4px solid #ef4444', marginBottom: '1.5rem', background: 'rgba(239, 68, 68, 0.1)' }}>
-            <p style={{ color: '#fca5a5', fontWeight: 500 }}>{error}</p>
+      {/* Main SaaS Layout (Sidebar + Content) */}
+      <div className="saas-body-wrapper">
+        {/* Left Sidebar */}
+        <aside className="saas-sidebar">
+          <div className="sidebar-nav-section">
+            <div className="nav-group-label">NAVIGATION</div>
+
+            <button 
+              className={`sidebar-nav-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setActiveTab('dashboard')}
+            >
+              <LayoutDashboard size={18} />
+              <span>Dashboard</span>
+            </button>
+
+            <button 
+              className={`sidebar-nav-btn ${activeTab === 'candidates' || view === 'selector' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('candidates');
+                if (view !== 'selector' && !view === 'chat') handleRestart();
+              }}
+            >
+              <Users size={18} />
+              <span>Candidates</span>
+              <span className="nav-count-badge">{candidates.length}</span>
+            </button>
+
+            <button 
+              className={`sidebar-nav-btn ${view === 'chat' ? 'active' : ''}`}
+              onClick={() => {
+                if (messages.length > 0) setView('chat');
+              }}
+              disabled={messages.length === 0}
+            >
+              <MessageSquare size={18} />
+              <span>Interviews</span>
+              {view === 'chat' && <span className="nav-live-dot" />}
+            </button>
+
+            <button 
+              className={`sidebar-nav-btn ${activeTab === 'analytics' ? 'active' : ''}`}
+              onClick={() => setActiveTab('analytics')}
+            >
+              <BarChart3 size={18} />
+              <span>Analytics</span>
+            </button>
+
+            <button 
+              className={`sidebar-nav-btn ${activeTab === 'settings' ? 'active' : ''}`}
+              onClick={() => setActiveTab('settings')}
+            >
+              <Settings size={18} />
+              <span>Settings</span>
+            </button>
           </div>
-        )}
 
-        {view === 'selector' && (
-          <CandidateSelector
-            candidates={candidates}
-            selectedCandidate={selectedCandidate}
-            onSelectCandidate={setSelectedCandidate}
-            onStartInterview={handleStartInterview}
-            loading={loading}
-          />
-        )}
+          {/* AI Interviewer Tagline Box at Sidebar Bottom */}
+          <div className="sidebar-info-box">
+            <div className="info-box-title">
+              <Zap size={14} color="#38bdf8" /> AI Interviewer
+            </div>
+            <p className="info-box-text">
+              Personalized.<br />
+              Adaptive.<br />
+              Insightful.<br />
+              Built for real technical evaluation.
+            </p>
+          </div>
 
-        {view === 'chat' && (
-          <ChatInterface
-            candidate={selectedCandidate}
-            messages={messages}
-            onSendTurn={handleSendTurn}
-            loading={loading}
-            questionCount={questionCount}
-            daysCoveredCount={daysCoveredCount}
-            onBackToCandidates={handleRestart}
-          />
-        )}
+          {/* User/Admin Section */}
+          <div className="sidebar-admin-footer">
+            <div className="admin-avatar-circle">
+              <span>LE</span>
+            </div>
+            <div className="admin-user-meta">
+              <div className="admin-name">Lead Evaluator</div>
+              <div className="admin-role">Admin Portal</div>
+            </div>
+          </div>
+        </aside>
 
-        {view === 'feedback' && (
-          <FeedbackView
-            candidate={selectedCandidate}
-            feedback={feedback}
-            onRestart={handleRestart}
-          />
-        )}
-      </main>
+        {/* Main Content View */}
+        <main className="saas-main-content">
+          {error && (
+            <div className="glass-card error-banner">
+              <p>{error}</p>
+            </div>
+          )}
+
+          {view === 'selector' && (
+            <CandidateSelector
+              candidates={candidates}
+              selectedCandidate={selectedCandidate}
+              onSelectCandidate={setSelectedCandidate}
+              onStartInterview={handleStartInterview}
+              loading={loading}
+            />
+          )}
+
+          {view === 'chat' && (
+            <ChatInterface
+              candidate={selectedCandidate}
+              messages={messages}
+              onSendTurn={handleSendTurn}
+              loading={loading}
+              questionCount={questionCount}
+              daysCoveredCount={daysCoveredCount}
+              onBackToCandidates={handleRestart}
+            />
+          )}
+
+          {view === 'feedback' && (
+            <FeedbackView
+              candidate={selectedCandidate}
+              feedback={feedback}
+              onRestart={handleRestart}
+            />
+          )}
+        </main>
+      </div>
     </div>
   );
 }
