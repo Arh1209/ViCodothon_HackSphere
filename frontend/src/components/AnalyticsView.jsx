@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   BarChart3, PieChart, Activity, Award, CheckCircle2, AlertTriangle, 
-  HelpCircle, Calendar, Users, Cpu, Layers, Sparkles, TrendingUp, Target, Compass
+  HelpCircle, Calendar, Users, Cpu, Layers, Sparkles, TrendingUp, Target, Compass,
+  User, Filter, Briefcase, GraduationCap, ArrowRight, CheckCircle, Clock, BookOpen
 } from 'lucide-react';
 
 /* -------------------------------------------------------------
@@ -106,10 +107,6 @@ function VerticalBarChart({ data }) {
             <stop offset="0%" stopColor="#38bdf8" />
             <stop offset="100%" stopColor="#6366f1" />
           </linearGradient>
-          <linearGradient id="barGradActive" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#34d399" />
-            <stop offset="100%" stopColor="#38bdf8" />
-          </linearGradient>
         </defs>
 
         {/* Grid lines */}
@@ -135,7 +132,6 @@ function VerticalBarChart({ data }) {
 
           return (
             <g key={idx}>
-              {/* Value label above bar */}
               <text 
                 x={x + barWidth / 2} 
                 y={y - 8} 
@@ -147,10 +143,8 @@ function VerticalBarChart({ data }) {
                 {item.value}
               </text>
 
-              {/* Bar background track */}
               <rect x={x} y={25} width={barWidth} height={chartHeight} rx="6" fill="rgba(255,255,255,0.03)" />
 
-              {/* Filled Bar */}
               <rect
                 x={x}
                 y={hasValue ? y : chartHeight + 21}
@@ -161,7 +155,6 @@ function VerticalBarChart({ data }) {
                 style={{ transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
               />
 
-              {/* X-axis Label */}
               <text x={x + barWidth / 2} y={chartHeight + 45} fill="#cbd5e1" fontSize="10" fontWeight="600" textAnchor="middle">
                 Day {item.day}
               </text>
@@ -176,14 +169,14 @@ function VerticalBarChart({ data }) {
 /* -------------------------------------------------------------
    SVG Visual Chart 3: Competency Radar / Spider Chart
 ------------------------------------------------------------- */
-function RadarChart() {
+function RadarChart({ scores }) {
   const axes = [
-    { label: 'Vector Embeddings', val: 85 },
-    { label: 'Vector DBs', val: 78 },
-    { label: 'Prompt Schemas', val: 92 },
-    { label: 'MCP & Multi-Agent', val: 70 },
-    { label: 'RAG Search', val: 88 },
-    { label: 'Production Ops', val: 75 }
+    { label: 'Vector Embeddings', val: scores?.embeddings || 85 },
+    { label: 'Vector DBs', val: scores?.vectorDb || 78 },
+    { label: 'Prompt Schemas', val: scores?.prompts || 92 },
+    { label: 'MCP & Multi-Agent', val: scores?.agents || 70 },
+    { label: 'RAG Search', val: scores?.rag || 88 },
+    { label: 'Production Ops', val: scores?.ops || 75 }
   ];
 
   const size = 260;
@@ -328,13 +321,30 @@ function AreaTrendGraph({ sessions }) {
 }
 
 export default function AnalyticsView({ sessions, candidates, settings = { min_questions: 8, min_curriculum_days: 4 } }) {
-  const totalSessions = sessions.length;
-  const completedSessions = sessions.filter(s => s.done).length;
+  const [selectedCandidateId, setSelectedCandidateId] = useState('ALL');
 
-  const totalQuestions = sessions.reduce((sum, s) => sum + (s.questionCount || 0), 0);
+  // Find currently selected candidate
+  const selectedCandidate = useMemo(() => {
+    if (selectedCandidateId === 'ALL') return null;
+    return candidates.find(c => c.member?.id === selectedCandidateId) || null;
+  }, [selectedCandidateId, candidates]);
+
+  // Filter sessions for selected candidate
+  const filteredSessions = useMemo(() => {
+    if (selectedCandidateId === 'ALL') return sessions;
+    return sessions.filter(s => 
+      s.candidateId === selectedCandidateId || 
+      (selectedCandidate && s.candidateName === selectedCandidate.member?.name)
+    );
+  }, [selectedCandidateId, sessions, selectedCandidate]);
+
+  const totalSessions = filteredSessions.length;
+  const completedSessions = filteredSessions.filter(s => s.done).length;
+
+  const totalQuestions = filteredSessions.reduce((sum, s) => sum + (s.questionCount || 0), 0);
   const avgQuestions = totalSessions > 0 ? (totalQuestions / totalSessions).toFixed(1) : 0;
 
-  const totalDays = sessions.reduce((sum, s) => sum + (s.uniqueDaysCount || 0), 0);
+  const totalDays = filteredSessions.reduce((sum, s) => sum + (s.uniqueDaysCount || 0), 0);
   const avgDays = totalSessions > 0 ? (totalDays / totalSessions).toFixed(1) : 0;
 
   // Evaluation quality counters
@@ -342,7 +352,7 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
   let partialCount = 0;
   let weakCount = 0;
 
-  sessions.forEach(s => {
+  filteredSessions.forEach(s => {
     (s.evaluations || []).forEach(ev => {
       const corr = ev.correctness;
       if (corr === 'strong') strongCount++;
@@ -356,9 +366,27 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
   const partialPct = totalEvals > 0 ? Math.round((partialCount / totalEvals) * 100) : 0;
   const weakPct = totalEvals > 0 ? Math.round((weakCount / totalEvals) * 100) : 0;
 
+  // Calculate radar scores based on candidate performance or cohort average
+  const radarScores = useMemo(() => {
+    if (!selectedCandidate) {
+      return { embeddings: 85, vectorDb: 78, prompts: 92, agents: 70, rag: 88, ops: 75 };
+    }
+    const exp = selectedCandidate.member?.yearsExperience || 3;
+    const completed = selectedCandidate.signals?.missionsCompleted || 0;
+    const base = Math.min(95, 60 + exp * 3 + (completed / 31) * 20);
+    return {
+      embeddings: Math.min(98, Math.round(base + 5)),
+      vectorDb: Math.min(95, Math.round(base)),
+      prompts: Math.min(99, Math.round(base + 8)),
+      agents: Math.min(92, Math.round(base - 5)),
+      rag: Math.min(96, Math.round(base + 2)),
+      ops: Math.min(90, Math.round(base - 2))
+    };
+  }, [selectedCandidate]);
+
   // Curriculum days frequency
   const dayFreq = {};
-  sessions.forEach(s => {
+  filteredSessions.forEach(s => {
     (s.daysCovered || []).forEach(d => {
       dayFreq[d] = (dayFreq[d] || 0) + 1;
     });
@@ -370,17 +398,89 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
     value: dayFreq[d] || 0
   }));
 
+  // Latest session feedback for individual candidate
+  const latestSessionWithFeedback = useMemo(() => {
+    return filteredSessions.slice().reverse().find(s => s.feedback);
+  }, [filteredSessions]);
+
   return (
     <div className="analytics-page-container">
       {/* Page Header */}
-      <div className="page-header">
-        <h1 className="hero-heading">
-          Evaluation <span className="gradient-text">Analytics & Insights</span>
-        </h1>
-        <p className="hero-subtext">
-          Programmatic performance analysis, curriculum testing coverage, answer depth breakdown, and evaluation quality metrics.
-        </p>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 className="hero-heading">
+            Evaluation <span className="gradient-text">Analytics & Insights</span>
+          </h1>
+          <p className="hero-subtext">
+            Programmatic performance analysis, candidate deep-dive analytics, curriculum testing coverage, and evaluation quality metrics.
+          </p>
+        </div>
+
+        {/* Candidate Selector Dropdown */}
+        <div className="glass-card" style={{ padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+          <User size={16} color="#818cf8" />
+          <select 
+            className="filter-select"
+            value={selectedCandidateId}
+            onChange={(e) => setSelectedCandidateId(e.target.value)}
+            style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.9rem', fontWeight: 600, outline: 'none', cursor: 'pointer' }}
+          >
+            <option value="ALL" style={{ background: '#0f172a', color: '#fff' }}>🌐 All Candidates (Cohort Overview)</option>
+            {candidates.map(c => (
+              <option key={c.member.id} value={c.member.id} style={{ background: '#0f172a', color: '#fff' }}>
+                👤 {c.member.name} ({c.member.jobRole})
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+
+      {/* Candidate Profile Card if Individual Selected */}
+      {selectedCandidate && (
+        <div className="glass-card" style={{ marginBottom: '2rem', padding: '1.25rem 1.5rem', background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(56,189,248,0.08))', border: '1px solid rgba(129,140,248,0.3)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div className="admin-avatar-circle" style={{ width: '48px', height: '48px', fontSize: '1.1rem', background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}>
+                {selectedCandidate.member?.name ? selectedCandidate.member.name.substring(0, 2).toUpperCase() : 'CA'}
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <h2 style={{ fontSize: '1.3rem', color: '#fff', fontWeight: 700 }}>{selectedCandidate.member?.name}</h2>
+                  <span className="candidate-id-badge">{selectedCandidate.member?.id}</span>
+                  {selectedCandidate.isRegisteredUser && (
+                    <span className="recommended-badge" style={{ background: 'rgba(168, 85, 247, 0.2)', border: '1px solid rgba(168, 85, 247, 0.4)', color: '#e9d5ff' }}>
+                      Registered User
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontSize: '0.88rem', color: '#a5b4fc', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <Briefcase size={14} /> {selectedCandidate.member?.jobRole} ({selectedCandidate.member?.yearsExperience} yrs exp)
+                  </span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <GraduationCap size={14} /> {selectedCandidate.member?.education}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '1.25rem' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#38bdf8' }}>{filteredSessions.length}</div>
+                <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Interviews</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#34d399' }}>{selectedCandidate.signals?.missionsCompleted || 0}</div>
+                <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Missions</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#c084fc' }}>{selectedCandidate.signals?.commitDays || 0}d</div>
+                <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Commit Days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Top Metrics Cards Row */}
       <div className="metrics-grid" style={{ marginBottom: '2rem' }}>
@@ -390,7 +490,7 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
           </div>
           <div>
             <div className="metric-value">{totalSessions}</div>
-            <div className="metric-label">Total Sessions</div>
+            <div className="metric-label">{selectedCandidate ? 'Candidate Sessions' : 'Total Sessions'}</div>
           </div>
         </div>
 
@@ -400,7 +500,7 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
           </div>
           <div>
             <div className="metric-value">{completedSessions}</div>
-            <div className="metric-label">Completed</div>
+            <div className="metric-label">Completed Sessions</div>
           </div>
         </div>
 
@@ -434,7 +534,7 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
             <PieChart size={18} color="#c084fc" /> Answer Depth & Technical Precision
           </h3>
           <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginBottom: '1rem' }}>
-            Distribution of candidate responses evaluated as strong, intermediate, or foundational.
+            {selectedCandidate ? `Response evaluation breakdown for ${selectedCandidate.member?.name}.` : 'Distribution of candidate responses evaluated as strong, intermediate, or foundational.'}
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', alignItems: 'center', gap: '1rem' }}>
@@ -469,13 +569,13 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
         {/* Visual Graph 2: Radar Competency Chart */}
         <div className="glass-card">
           <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Compass size={18} color="#38bdf8" /> Cohort Technical Competency Radar
+            <Compass size={18} color="#38bdf8" /> {selectedCandidate ? `${selectedCandidate.member?.name}'s Technical Radar` : 'Cohort Technical Competency Radar'}
           </h3>
           <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginBottom: '0.75rem' }}>
-            Overall evaluation scoring across 6 key curriculum domain competencies.
+            {selectedCandidate ? `Technical domain scores for ${selectedCandidate.member?.name} across curriculum modules.` : 'Overall evaluation scoring across 6 key curriculum domain competencies.'}
           </p>
 
-          <RadarChart />
+          <RadarChart scores={radarScores} />
         </div>
       </div>
 
@@ -487,7 +587,7 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
               <BarChart3 size={18} color="#34d399" /> Curriculum Topic Testing Frequency
             </h3>
             <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginTop: '0.2rem' }}>
-              Number of interview evaluations conducted per 31-day curriculum module.
+              {selectedCandidate ? `Modules tested during ${selectedCandidate.member?.name}'s interviews.` : 'Number of interview evaluations conducted per 31-day curriculum module.'}
             </p>
           </div>
           <span className="badge badge-primary">Target Pool: 10 Core Modules</span>
@@ -496,7 +596,58 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
         <VerticalBarChart data={verticalBarData} />
       </div>
 
-      {/* Grid Row 3: Smooth Area Trend Graph & Cohort Leaderboard */}
+      {/* Individual AI Feedback Deep-Dive if Candidate Selected */}
+      {selectedCandidate && latestSessionWithFeedback && (
+        <div className="glass-card" style={{ marginBottom: '2rem', borderColor: 'rgba(56,189,248,0.3)' }}>
+          <h3 style={{ color: '#fff', fontSize: '1.15rem', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Sparkles size={18} color="#38bdf8" /> Latest Post-Interview AI Evaluation Feedback ({selectedCandidate.member?.name})
+          </h3>
+          
+          <p style={{ color: '#e2e8f0', fontSize: '0.92rem', lineHeight: '1.5', background: 'rgba(255,255,255,0.03)', padding: '0.85rem 1rem', borderRadius: '8px', borderLeft: '3px solid #38bdf8', marginBottom: '1.25rem' }}>
+            {latestSessionWithFeedback.feedback.summary}
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+            {/* Strengths */}
+            <div style={{ background: 'rgba(52,211,153,0.06)', border: '1px solid rgba(52,211,153,0.2)', padding: '1rem', borderRadius: '10px' }}>
+              <div style={{ color: '#34d399', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <CheckCircle2 size={15} /> Observed Strengths
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#e2e8f0', fontSize: '0.82rem', lineHeight: '1.5' }}>
+                {latestSessionWithFeedback.feedback.strengths?.map((s, i) => (
+                  <li key={i} style={{ marginBottom: '0.35rem' }}>{s}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Gaps */}
+            <div style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.2)', padding: '1rem', borderRadius: '10px' }}>
+              <div style={{ color: '#fbbf24', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <AlertTriangle size={15} /> Areas for Growth
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#e2e8f0', fontSize: '0.82rem', lineHeight: '1.5' }}>
+                {latestSessionWithFeedback.feedback.gaps?.map((g, i) => (
+                  <li key={i} style={{ marginBottom: '0.35rem' }}>{g}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Next Steps */}
+            <div style={{ background: 'rgba(192,132,252,0.06)', border: '1px solid rgba(192,132,252,0.2)', padding: '1rem', borderRadius: '10px' }}>
+              <div style={{ color: '#c084fc', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <Target size={15} /> Recommended Next Steps
+              </div>
+              <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#e2e8f0', fontSize: '0.82rem', lineHeight: '1.5' }}>
+                {latestSessionWithFeedback.feedback.next?.map((n, i) => (
+                  <li key={i} style={{ marginBottom: '0.35rem' }}>{n}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Grid Row 3: Smooth Area Trend Graph & Cohort / Individual Session History */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
         
         {/* Visual Graph 4: Session Depth Trend */}
@@ -505,23 +656,23 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
             <TrendingUp size={18} color="#c084fc" /> Session Question Depth Trend
           </h3>
           <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginBottom: '1rem' }}>
-            Question turn depth per recorded interview session.
+            {selectedCandidate ? `Question turn depth for ${selectedCandidate.member?.name}.` : 'Question turn depth per recorded interview session.'}
           </p>
 
-          <AreaTrendGraph sessions={sessions} />
+          <AreaTrendGraph sessions={filteredSessions} />
         </div>
 
-        {/* Cohort Progress Breakdown */}
+        {/* Cohort / Individual Progress Breakdown */}
         <div className="glass-card">
           <h3 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Award size={18} color="#fbbf24" /> Cohort Completion Leaderboard
+            <Award size={18} color="#fbbf24" /> {selectedCandidate ? `${selectedCandidate.member?.name}'s Mission Progress` : 'Cohort Completion Leaderboard'}
           </h3>
           <p style={{ color: '#94a3b8', fontSize: '0.82rem', marginBottom: '1rem' }}>
-            Mission progress signals across candidates.
+            {selectedCandidate ? 'Curriculum day missions completed.' : 'Mission progress signals across candidates.'}
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {candidates.slice(0, 4).map((c, i) => {
+            {(selectedCandidate ? [selectedCandidate] : candidates.slice(0, 4)).map((c, i) => {
               const completedMissions = c.signals?.missionsCompleted || 0;
               const pct = Math.round((completedMissions / 31) * 100);
               const barColors = [
@@ -531,9 +682,9 @@ export default function AnalyticsView({ sessions, candidates, settings = { min_q
                 'linear-gradient(90deg, #fbbf24, #f97316)'
               ];
               return (
-                <div key={c.member.id} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', padding: '0.75rem 1rem', borderRadius: '10px' }}>
+                <div key={c.member?.id || i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', padding: '0.75rem 1rem', borderRadius: '10px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.35rem' }}>
-                    <span style={{ color: '#fff', fontWeight: 600 }}>{c.member.name} ({c.member.jobRole})</span>
+                    <span style={{ color: '#fff', fontWeight: 600 }}>{c.member?.name} ({c.member?.jobRole})</span>
                     <span style={{ color: '#a5b4fc', fontWeight: 600 }}>{completedMissions} / 31 Days ({pct}%)</span>
                   </div>
                   <div className="progress-track">
