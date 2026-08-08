@@ -237,3 +237,47 @@ def test_delete_candidate():
     # 3. Verify candidate no longer appears in candidate list
     candidates_after = client.get("/api/candidates").json()["candidates"]
     assert not any(c["member"]["id"] == cand_id for c in candidates_after)
+
+def test_add_candidate_form_validation_and_persistence():
+    import time
+    unique_email = f"new_cand_{int(time.time())}@example.com"
+
+    # 1. Validation test: Missing required field (full_name)
+    invalid_resp = client.post("/api/admin/add-candidate", json={
+        "email": unique_email,
+        "job_role": "AI Engineer"
+    })
+    assert invalid_resp.status_code == 400
+
+    # 2. Successfully add candidate with full fields (Full Name, Email, Phone, Resume, Skills, Experience, Education, Position)
+    payload = {
+        "full_name": "Marcus Vance",
+        "email": unique_email,
+        "phone": "+1 (555) 234-5678",
+        "position": "Principal AI Architect",
+        "years_experience": 10.5,
+        "education": "PhD Computer Science",
+        "skills": "Python, PyTorch, Vector Search, MCP, FastAPI",
+        "resume": "https://example.com/resumes/marcus.pdf"
+    }
+    add_resp = client.post("/api/admin/add-candidate", json=payload)
+    assert add_resp.status_code == 200
+    added_cand = add_resp.json()["candidate"]
+    assert added_cand["member"]["name"] == "Marcus Vance"
+    assert added_cand["member"]["jobRole"] == "Principal AI Architect"
+    assert added_cand["member"]["phone"] == "+1 (555) 234-5678"
+    assert added_cand["member"]["resume"] == "https://example.com/resumes/marcus.pdf"
+    assert "PyTorch" in added_cand["member"]["skills"]
+
+    # 3. Verify newly added candidate immediately appears in candidates list
+    cand_list_resp = client.get("/api/candidates")
+    assert cand_list_resp.status_code == 200
+    all_cands = cand_list_resp.json()["candidates"]
+    matched = [c for c in all_cands if c["member"].get("email") == unique_email or c["member"]["id"] == added_cand["member"]["id"]]
+    assert len(matched) == 1
+    assert matched[0]["member"]["name"] == "Marcus Vance"
+
+    # 4. Duplicate handling test: Attempting to add candidate with same email fails
+    dup_resp = client.post("/api/admin/add-candidate", json=payload)
+    assert dup_resp.status_code == 400
+    assert "already exists" in dup_resp.json()["detail"].lower()

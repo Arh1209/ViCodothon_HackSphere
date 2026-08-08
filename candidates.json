@@ -2,6 +2,48 @@
   "candidates": [
     {
       "member": {
+        "id": "CAND-REG-106",
+        "name": "Candidate To Delete",
+        "jobRole": "Tester",
+        "yearsExperience": 2.0,
+        "education": "BS",
+        "phone": "",
+        "resume": "",
+        "skills": [],
+        "status": "REGISTERED",
+        "email": "delcand@example.com"
+      },
+      "missions": [],
+      "signals": {
+        "commitDays": 0,
+        "missionsCompleted": 0,
+        "missionsFirstTry": 0
+      },
+      "isRegisteredUser": true
+    },
+    {
+      "member": {
+        "id": "CAND-REG-105",
+        "name": "Test Candidate",
+        "jobRole": "ML Ops Engineer",
+        "yearsExperience": 4.5,
+        "education": "BS Software Engineering",
+        "phone": "",
+        "resume": "",
+        "skills": [],
+        "status": "REGISTERED",
+        "email": "testcand_1786204529@example.com"
+      },
+      "missions": [],
+      "signals": {
+        "commitDays": 0,
+        "missionsCompleted": 0,
+        "missionsFirstTry": 0
+      },
+      "isRegisteredUser": true
+    },
+    {
+      "member": {
         "id": "CAND-REG-104",
         "name": "Candidate To Delete",
         "jobRole": "Tester",

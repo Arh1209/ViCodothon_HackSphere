@@ -35,10 +35,12 @@ export default function CandidateSelector({
   const [addForm, setAddForm] = useState({
     full_name: '',
     email: '',
-    password: '',
+    phone: '',
     job_role: '',
     years_experience: 3,
-    education: 'BS Computer Science'
+    education: 'BS Computer Science',
+    skills: '',
+    resume: ''
   });
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState(null);
@@ -77,12 +79,16 @@ export default function CandidateSelector({
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
-    if (!addForm.full_name || !addForm.email || !addForm.password || !addForm.job_role) {
-      setAddError('Please fill in all required fields.');
+    if (!addForm.full_name || !addForm.full_name.trim()) {
+      setAddError('Full Name is required.');
       return;
     }
-    if (addForm.password.length < 6) {
-      setAddError('Password must be at least 6 characters.');
+    if (!addForm.email || !addForm.email.trim() || !addForm.email.includes('@')) {
+      setAddError('A valid Email address is required.');
+      return;
+    }
+    if (!addForm.job_role || !addForm.job_role.trim()) {
+      setAddError('Position / Job Applied For is required.');
       return;
     }
 
@@ -96,7 +102,16 @@ export default function CandidateSelector({
       });
       setShowAddModal(false);
       const addedCand = res.candidate;
-      setAddForm({ full_name: '', email: '', password: '', job_role: '', years_experience: 3, education: 'BS Computer Science' });
+      setAddForm({
+        full_name: '',
+        email: '',
+        phone: '',
+        job_role: '',
+        years_experience: 3,
+        education: 'BS Computer Science',
+        skills: '',
+        resume: ''
+      });
       
       // Reset search filters so the newly added candidate is not hidden
       setSearchQuery('');
@@ -104,7 +119,7 @@ export default function CandidateSelector({
       setExpFilter('ALL');
 
       // Show success toast notification
-      setToastMessage(`Candidate "${addedCand.member.name}" added successfully!`);
+      setToastMessage(`Candidate "${addedCand.member.name}" created successfully!`);
       setTimeout(() => setToastMessage(null), 4000);
 
       // Auto-select the newly added candidate and scroll to top
@@ -548,27 +563,26 @@ export default function CandidateSelector({
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Password *</label>
+                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Phone Number</label>
                   <input 
-                    type="password" 
+                    type="tel" 
                     className="chat-input" 
                     style={{ width: '100%' }}
-                    placeholder="••••••••"
-                    value={addForm.password}
-                    onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
-                    required
+                    placeholder="+1 (555) 019-2834"
+                    value={addForm.phone}
+                    onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })}
                   />
                 </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Target Job Role *</label>
+                  <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Position / Job Applied For *</label>
                   <input 
                     type="text" 
                     className="chat-input" 
                     style={{ width: '100%' }}
-                    placeholder="e.g. AI Engineer"
+                    placeholder="e.g. Senior AI Engineer"
                     value={addForm.job_role}
                     onChange={(e) => setAddForm({ ...addForm, job_role: e.target.value })}
                     required
@@ -603,12 +617,36 @@ export default function CandidateSelector({
                 />
               </div>
 
+              <div>
+                <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Technical Skills (comma-separated)</label>
+                <input 
+                  type="text" 
+                  className="chat-input" 
+                  style={{ width: '100%' }}
+                  placeholder="e.g. Python, PyTorch, FastAPI, Vector Search, MCP"
+                  value={addForm.skills}
+                  onChange={(e) => setAddForm({ ...addForm, skills: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', color: '#a5b4fc', display: 'block', marginBottom: '0.35rem', fontWeight: 600 }}>Resume Link / Document Reference</label>
+                <input 
+                  type="text" 
+                  className="chat-input" 
+                  style={{ width: '100%' }}
+                  placeholder="https://drive.google.com/resume.pdf or summary text"
+                  value={addForm.resume}
+                  onChange={(e) => setAddForm({ ...addForm, resume: e.target.value })}
+                />
+              </div>
+
               <div className="modal-footer" style={{ marginTop: '0.5rem' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>
                   Cancel
                 </button>
                 <button type="submit" className="btn btn-primary" disabled={addLoading}>
-                  {addLoading ? 'Creating Candidate...' : 'Create Candidate'}
+                  {addLoading ? 'Saving Candidate...' : 'Save / Add Candidate'}
                 </button>
               </div>
             </form>

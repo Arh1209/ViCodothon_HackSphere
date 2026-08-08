@@ -135,20 +135,40 @@ def get_all_sessions():
 
 def register_candidate_impl(payload: Dict[str, Any]):
     from app.services.db_service import register_user
-    full_name = payload.get("full_name", "")
+    full_name = payload.get("full_name") or payload.get("name", "")
     email = payload.get("email", "")
-    password = payload.get("password", "")
-    job_role = payload.get("job_role", "")
-    years_experience = payload.get("years_experience", 0)
+    password = payload.get("password", "password123")
+    job_role = payload.get("job_role") or payload.get("position") or payload.get("jobRole", "")
+    years_experience = payload.get("years_experience") or payload.get("experience") or payload.get("yearsExperience", 0)
     education = payload.get("education", "")
+    phone = payload.get("phone", "")
+    resume = payload.get("resume", "")
+    skills = payload.get("skills", "")
 
-    if not full_name or not email or not password or not job_role:
-        raise HTTPException(status_code=400, detail="Missing required candidate fields (Full Name, Email, Password, Job Role).")
-    if len(password) < 6:
-        raise HTTPException(status_code=400, detail="Password must be at least 6 characters.")
+    if not full_name or not str(full_name).strip():
+        raise HTTPException(status_code=400, detail="Full Name is required.")
+    if not email or not str(email).strip():
+        raise HTTPException(status_code=400, detail="Email is required.")
+    if not job_role or not str(job_role).strip():
+        raise HTTPException(status_code=400, detail="Position / Job Role is required.")
+
+    if isinstance(skills, list):
+        skills_str = ", ".join(skills)
+    else:
+        skills_str = str(skills)
 
     try:
-        cand = register_user(full_name, email, password, job_role, float(years_experience), education)
+        cand = register_user(
+            full_name=str(full_name).strip(),
+            email=str(email).strip(),
+            password=str(password) if password else "password123",
+            job_role=str(job_role).strip(),
+            years_experience=float(years_experience) if years_experience else 0.0,
+            education=str(education).strip(),
+            phone=str(phone).strip(),
+            resume=str(resume).strip(),
+            skills=skills_str
+        )
         return {"candidate": cand, "message": "Candidate created successfully."}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
