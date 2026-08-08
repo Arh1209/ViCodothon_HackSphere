@@ -1,7 +1,7 @@
 import os
 import json
 from typing import Dict, List, Any, Optional
-from app.services.db_service import get_registered_candidates
+from app.services.db_service import get_registered_candidates, get_deleted_candidate_ids
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "data"))
 if not os.path.exists(DATA_DIR):
@@ -19,7 +19,11 @@ def load_candidates() -> List[Dict[str, Any]]:
 
     # Combine original cohort dataset with newly registered DB candidates
     registered_candidates = get_registered_candidates()
-    return original_candidates + registered_candidates
+    all_candidates = original_candidates + registered_candidates
+
+    # Exclude any candidate whose candidate_id is in deleted_candidates table
+    deleted_ids = get_deleted_candidate_ids()
+    return [c for c in all_candidates if c.get("member", {}).get("id") not in deleted_ids]
 
 def get_candidate_by_id(candidate_id: str) -> Optional[Dict[str, Any]]:
     candidates = load_candidates()

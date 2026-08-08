@@ -157,6 +157,15 @@ def register_candidate_impl(payload: Dict[str, Any]):
 def add_candidate_endpoint(payload: Dict[str, Any]):
     return register_candidate_impl(payload)
 
+@router.delete("/admin/candidate/{candidate_id}")
+def delete_candidate_endpoint(candidate_id: str):
+    from app.services.db_service import delete_candidate_db
+    try:
+        delete_candidate_db(candidate_id)
+        return {"candidateId": candidate_id, "message": "Candidate deleted successfully."}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to delete candidate: {str(e)}")
+
 @router.post("/auth/register")
 def register_candidate_endpoint(payload: Dict[str, Any]):
     return register_candidate_impl(payload)

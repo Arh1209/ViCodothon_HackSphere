@@ -206,3 +206,29 @@ def test_settings_get_and_update_validation():
     new_settings = valid_resp.json()["settings"]
     assert new_settings["min_questions"] == 10
     assert new_settings["min_curriculum_days"] == 5
+
+def test_delete_candidate():
+    # 1. Register candidate to delete
+    cand = client.post("/api/admin/add-candidate", json={
+        "full_name": "Candidate To Delete",
+        "email": "delcand@example.com",
+        "password": "password123",
+        "job_role": "Tester",
+        "years_experience": 2,
+        "education": "BS"
+    }).json()["candidate"]
+
+    cand_id = cand["member"]["id"]
+    
+    # Verify candidate exists in candidate list
+    candidates_before = client.get("/api/candidates").json()["candidates"]
+    assert any(c["member"]["id"] == cand_id for c in candidates_before)
+
+    # 2. Delete candidate
+    del_resp = client.delete(f"/api/admin/candidate/{cand_id}")
+    assert del_resp.status_code == 200
+    assert del_resp.json()["candidateId"] == cand_id
+
+    # 3. Verify candidate no longer appears in candidate list
+    candidates_after = client.get("/api/candidates").json()["candidates"]
+    assert not any(c["member"]["id"] == cand_id for c in candidates_after)

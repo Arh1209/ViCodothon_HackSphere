@@ -77,6 +77,17 @@ export async function addCandidate(userData) {
   return await res.json();
 }
 
+export async function deleteCandidate(candidateId) {
+  const res = await fetch(`${API_BASE}/admin/candidate/${candidateId}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.detail || 'Failed to delete candidate.');
+  }
+  return await res.json();
+}
+
 export async function registerCandidate(userData) {
   return addCandidate(userData);
 }

@@ -63,8 +63,41 @@ def init_db():
     )
     """)
 
+    # Deleted Candidates Table (Soft delete tracker)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS deleted_candidates (
+        candidate_id TEXT PRIMARY KEY,
+        deleted_at REAL NOT NULL
+    )
+    """)
+
     conn.commit()
     conn.close()
+
+def get_deleted_candidate_ids() -> set:
+    init_db()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT candidate_id FROM deleted_candidates")
+    rows = cursor.fetchall()
+    conn.close()
+    return {r["candidate_id"] for r in rows}
+
+def delete_candidate_db(candidate_id: str) -> bool:
+    init_db()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # 1. Delete from users table if present
+    cursor.execute("DELETE FROM users WHERE candidate_id = ?", (candidate_id,))
+    
+    # 2. Record in deleted_candidates table
+    now = time.time()
+    cursor.execute("INSERT OR REPLACE INTO deleted_candidates (candidate_id, deleted_at) VALUES (?, ?)", (candidate_id, now))
+
+    conn.commit()
+    conn.close()
+    return True
 
 def hash_password(password: str) -> str:
     salt = "interview_agent_secure_salt_2026"

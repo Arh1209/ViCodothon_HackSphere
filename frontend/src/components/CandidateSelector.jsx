@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { 
-  User, Briefcase, GraduationCap, Award, Play, Eye, X, Search, Filter, ArrowUpDown,
+  User, Briefcase, GraduationCap, Award, Play, Eye, X, Search, Filter, ArrowUpDown, Trash2,
   Sparkles, Sliders, Cpu, BarChart3, CheckCircle2, AlertCircle, Clock, BookOpen, Layers, ShieldCheck
 } from 'lucide-react';
 
@@ -26,6 +26,11 @@ export default function CandidateSelector({
   loading 
 }) {
   const [profileModalCandidate, setProfileModalCandidate] = useState(null);
+  const [deleteConfirmCandidate, setDeleteConfirmCandidate] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+  const [toastMessage, setToastMessage] = useState(null);
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({
     full_name: '',
@@ -37,6 +42,26 @@ export default function CandidateSelector({
   });
   const [addLoading, setAddLoading] = useState(false);
   const [addError, setAddError] = useState(null);
+
+  const handleConfirmDelete = async () => {
+    if (!deleteConfirmCandidate) return;
+    const candId = deleteConfirmCandidate.member?.id;
+    setDeleteLoading(true);
+    setDeleteError(null);
+
+    try {
+      const { deleteCandidate } = await import('../services/api');
+      await deleteCandidate(candId);
+      setDeleteConfirmCandidate(null);
+      setToastMessage("Candidate deleted successfully.");
+      setTimeout(() => setToastMessage(null), 3000);
+      if (onCandidateAdded) onCandidateAdded();
+    } catch (err) {
+      setDeleteError(err.message || "Failed to delete candidate.");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState('ALL');
@@ -244,11 +269,24 @@ export default function CandidateSelector({
                 {/* Card Header Top */}
                 <div className="card-top-bar">
                   <span className="candidate-id-badge">{member.id}</span>
-                  {isRecommended && (
-                    <span className="recommended-badge">
-                      <Sparkles size={12} /> Recommended
-                    </span>
-                  )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    {isRecommended && (
+                      <span className="recommended-badge">
+                        <Sparkles size={12} /> Recommended
+                      </span>
+                    )}
+                    <button 
+                      className="btn-delete-icon" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteConfirmCandidate(cand);
+                      }}
+                      title={`Delete ${member.name}`}
+                      style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#fca5a5', padding: '0.25rem 0.45rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Avatar & Basic Details */}
@@ -557,6 +595,74 @@ export default function CandidateSelector({
               </div>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Delete Candidate Confirmation Modal */}
+      {deleteConfirmCandidate && (
+        <div className="modal-backdrop" onClick={() => setDeleteConfirmCandidate(null)}>
+          <div className="modal-content glass-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '460px', borderColor: 'rgba(239, 68, 68, 0.4)' }}>
+            <div className="modal-header" style={{ borderBottomColor: 'rgba(239, 68, 68, 0.2)' }}>
+              <div>
+                <h2 style={{ fontSize: '1.25rem', color: '#fca5a5' }}>Delete Candidate?</h2>
+              </div>
+              <button className="modal-close-btn" onClick={() => setDeleteConfirmCandidate(null)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            {deleteError && (
+              <div style={{ padding: '0.75rem 1rem', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#fca5a5', borderRadius: '10px', fontSize: '0.85rem', marginTop: '1rem' }}>
+                {deleteError}
+              </div>
+            )}
+
+            <div className="modal-body" style={{ padding: '1rem 0' }}>
+              <p style={{ color: '#e2e8f0', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                Are you sure you want to delete <strong style={{ color: '#fff' }}>{deleteConfirmCandidate.member?.name}</strong>?
+              </p>
+              <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.4rem' }}>
+                This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={() => setDeleteConfirmCandidate(null)}>
+                Cancel
+              </button>
+              <button 
+                className="btn btn-primary" 
+                onClick={handleConfirmDelete} 
+                disabled={deleteLoading}
+                style={{ background: 'linear-gradient(135deg, #ef4444, #dc2626)', boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)' }}
+              >
+                {deleteLoading ? 'Deleting...' : 'Delete Candidate'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Toast Notification */}
+      {toastMessage && (
+        <div style={{
+          position: 'fixed',
+          bottom: '2rem',
+          right: '2rem',
+          background: 'rgba(15, 23, 42, 0.95)',
+          border: '1px solid #34d399',
+          color: '#34d399',
+          padding: '0.75rem 1.25rem',
+          borderRadius: '12px',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontSize: '0.9rem',
+          fontWeight: 600,
+          zIndex: 2000
+        }}>
+          <CheckCircle2 size={18} /> {toastMessage}
         </div>
       )}
     </div>
