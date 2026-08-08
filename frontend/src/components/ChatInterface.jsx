@@ -7,8 +7,9 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
   const [voiceError, setVoiceError] = useState(null);
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
+  const baseTextRef = useRef('');
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SpeechRecognition = typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
   const isVoiceSupported = Boolean(SpeechRecognition);
 
   const scrollToBottom = () => {
@@ -19,20 +20,37 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
     scrollToBottom();
   }, [messages, loading]);
 
-  const toggleVoiceInput = () => {
+  const toggleVoiceInput = async () => {
     if (!isVoiceSupported) {
-      setVoiceError('Voice input is not supported in this browser. Please use text input.');
+      setVoiceError('Web Speech API is not supported in this browser. Please type your answer using the text box.');
+      return;
+    }
+
+    // Stop listening if currently active
+    if (isListening) {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          console.warn('Error stopping recognition:', e);
+        }
+      }
+      setIsListening(false);
       return;
     }
 
     setVoiceError(null);
+    baseTextRef.current = inputMsg;
 
-    if (isListening) {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
+    // Request browser microphone permission if mediaDevices is supported
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (permErr) {
+        console.warn('Microphone permission request failed:', permErr);
+        setVoiceError('Microphone permission denied. Please grant microphone access in browser settings or use text input.');
+        return;
       }
-      setIsListening(false);
-      return;
     }
 
     try {
@@ -46,26 +64,36 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
       };
 
       recognition.onresult = (event) => {
-        let transcript = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
+        let finalTranscript = '';
+        let interimTranscript = '';
+
+        for (let i = 0; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) {
+            finalTranscript += result[0].transcript + ' ';
+          } else {
+            interimTranscript += result[0].transcript;
+          }
         }
-        if (transcript) {
-          setInputMsg((prev) => {
-            // Append transcribed text smoothly or set if empty
-            return prev ? `${prev} ${transcript.trim()}` : transcript.trim();
-          });
+
+        const combinedSpeech = (finalTranscript + interimTranscript).trim();
+        const base = baseTextRef.current.trim();
+
+        if (combinedSpeech) {
+          setInputMsg(base ? `${base} ${combinedSpeech}` : combinedSpeech);
         }
       };
 
       recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error);
-        if (event.error === 'not-allowed') {
-          setVoiceError('Microphone permission denied. You can continue using text input.');
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          setVoiceError('Microphone permission denied. You can continue typing your answer.');
         } else if (event.error === 'no-speech') {
-          setVoiceError('No speech detected. Please try again or type your answer.');
+          setVoiceError('No speech detected. Speak into microphone or type your answer.');
+        } else if (event.error === 'aborted') {
+          // Normal manual stop
         } else {
-          setVoiceError(`Voice input error (${event.error}). Text input remains available.`);
+          setVoiceError(`Voice recognition error (${event.error}). Text input remains available.`);
         }
         setIsListening(false);
       };
@@ -78,7 +106,7 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
       recognition.start();
     } catch (err) {
       console.error('Failed to initialize speech recognition:', err);
-      setVoiceError('Could not access microphone. Please use text input.');
+      setVoiceError('Could not start microphone speech recognition. Please use text input.');
       setIsListening(false);
     }
   };
@@ -86,10 +114,16 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!inputMsg.trim() || loading) return;
+
     if (isListening && recognitionRef.current) {
-      recognitionRef.current.stop();
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.warn('Error stopping recognition on submit:', e);
+      }
       setIsListening(false);
     }
+
     onSendTurn(inputMsg.trim());
     setInputMsg('');
     setVoiceError(null);
@@ -186,16 +220,20 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
           disabled={loading}
           title={isVoiceSupported ? (isListening ? 'Stop Listening' : 'Speak Answer (Optional Voice Input)') : 'Voice input unavailable in this browser'}
           style={{
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
             gap: '0.4rem',
-            background: isListening ? '#ef4444' : 'rgba(255, 255, 255, 0.08)',
+            padding: '0.65rem 1rem',
+            background: isListening ? '#dc2626' : 'rgba(255, 255, 255, 0.08)',
             borderColor: isListening ? '#ef4444' : 'var(--border-color)',
-            color: '#fff'
+            color: '#fff',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            animation: isListening ? 'pulse 1.5s infinite' : 'none'
           }}
         >
-          {isListening ? <MicOff size={16} /> : <Mic size={16} />}
-          <span style={{ fontSize: '0.85rem', display: 'none', smDisplay: 'inline' }}>
+          {isListening ? <MicOff size={16} color="#ffffff" /> : <Mic size={16} color={isVoiceSupported ? '#a5b4fc' : '#64748b'} />}
+          <span style={{ fontSize: '0.85rem', fontWeight: 500 }}>
             {isListening ? 'Listening...' : 'Speak Answer'}
           </span>
         </button>
@@ -203,7 +241,7 @@ export default function ChatInterface({ candidate, messages, onSendTurn, loading
         <input
           type="text"
           className="chat-input"
-          placeholder={isListening ? 'Listening... Speak your technical answer...' : 'Type your technical answer here...'}
+          placeholder={isListening ? '🎤 Listening... Speak your technical answer...' : 'Type your technical answer here...'}
           value={inputMsg}
           onChange={(e) => setInputMsg(e.target.value)}
           disabled={loading}
