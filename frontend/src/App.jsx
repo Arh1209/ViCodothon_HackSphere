@@ -290,17 +290,9 @@ export default function App() {
           </div>
         )}
 
-        {/* Portal Switcher & Tagline */}
+        {/* Header Tagline & Activity Feed */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {userRole === 'admin' ? (
-            <button 
-              className="btn btn-secondary"
-              onClick={() => { setUserRole('candidate'); setAuthView(currentUser ? 'dashboard' : 'login'); }}
-              style={{ fontSize: '0.82rem', padding: '0.4rem 0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
-            >
-              <UserCheck size={14} color="#38bdf8" /> Candidate Portal View
-            </button>
-          ) : (
+          {userRole === 'candidate' && (
             <button 
               className="btn btn-secondary"
               onClick={() => { setUserRole('admin'); }}
