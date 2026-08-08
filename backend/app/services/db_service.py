@@ -177,13 +177,6 @@ def register_user(
         "signals": { "commitDays": 0, "missionsCompleted": 0, "missionsFirstTry": 0 },
         "isRegisteredUser": True
     }
-
-    try:
-        from app.services.data_loader import sync_candidate_to_json_files
-        sync_candidate_to_json_files(cand_obj)
-    except Exception:
-        pass
-
     return cand_obj
 
 def authenticate_user(email: str, password: str) -> Optional[Dict[str, Any]]:

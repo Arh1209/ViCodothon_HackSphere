@@ -281,3 +281,6 @@ def test_add_candidate_form_validation_and_persistence():
     dup_resp = client.post("/api/admin/add-candidate", json=payload)
     assert dup_resp.status_code == 400
     assert "already exists" in dup_resp.json()["detail"].lower()
+
+    # 5. Clean up test candidate so no test data remains in database
+    client.delete(f"/api/admin/candidate/{added_cand['member']['id']}")
